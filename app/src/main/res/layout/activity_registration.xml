@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="rs.elfak.simon.diplproba.RegistrationActivity"
+        android:orientation="vertical"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/image"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/user"
+            android:onClick="onImageClk"
+            android:clickable="true"
+            android:cropToPadding="false"
+            android:layout_marginTop="10dp"
+            android:elevation="14dp"
+            android:translationZ="14dp" />
+        <!--android:adjustViewBounds="true"
+            android:scaleType="fitXY"-->
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/fnameTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fname"
+                android:background="@drawable/myedittext"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:hint="@string/fname"
+                android:layout_marginBottom="5dp"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/lnameTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lname"
+                android:background="@drawable/myedittext"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:hint="@string/lname"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="5dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/emailTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/email"
+                android:background="@drawable/myedittext"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:hint="@string/email"
+                android:layout_marginTop="30dp"
+                android:inputType="textEmailAddress"
+                android:layout_marginBottom="5dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/unameTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/uname"
+                android:background="@drawable/myedittext"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:hint="@string/user_name"
+                android:layout_marginBottom="5dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/upassTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/upass"
+                android:background="@drawable/myedittext"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:hint="@string/user_pass"
+                android:layout_marginTop="30dp"
+                android:inputType="textPassword"
+                android:layout_marginBottom="5dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reg"
+            android:id="@+id/create"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:onClick="onCreateBtn"
+            android:stateListAnimator="@drawable/my_animator"
+            android:background="@drawable/mybutton"
+            android:layout_marginBottom="20dp" />
+
+    </LinearLayout>
+</ScrollView>
