@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity
     MenuItem searchItem;
     int userID;
     String frResp;
+    String frResp1;
 
     public String getFrResp() {
         return frResp;
@@ -89,9 +90,9 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(getApplicationContext(), "Nema takvog korisnika!", Toast.LENGTH_SHORT).show();
                     } else
                     {
-                        Gson gson = new GsonBuilder().serializeNulls().create();
-                        users = gson.fromJson(response, new TypeToken<ArrayList<User>>(){}.getType());
-                        Toast.makeText(getApplicationContext(), users.get(0).getFname(), Toast.LENGTH_SHORT).show();
+                        frResp = response;
+                        FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                        fr.listFriends();
                     }
                 }
             });
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity
                         return;
                     }
                     if (!response.equals("nofriends")) {
-                        frResp = response;
+                        frResp = frResp1 = response;
                     } else {
                         Toast.makeText(getApplicationContext(), "Nema prijatelja!", Toast.LENGTH_SHORT).show();
                     }
@@ -196,6 +197,12 @@ public class MainActivity extends AppCompatActivity
                 String pom = searchView.getQuery().toString();
                 if (!pom.equals(""))
                     LoginActivity.socket.emit("findUsers", pom);
+                else
+                {
+                    frResp = frResp1;
+                    FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                    fr.listFriends();
+                }
                 return true;
             }
         });

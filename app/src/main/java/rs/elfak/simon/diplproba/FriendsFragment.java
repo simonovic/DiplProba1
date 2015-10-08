@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class FriendsFragment extends Fragment implements View.OnClickListener
+public class FriendsFragment extends Fragment
 {
     UserListAdapter frAdap;
     ArrayList<User> friends;
@@ -42,8 +42,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.fragment_friends, container, false);
-        Button mainBtn = (Button)v.findViewById(R.id.mainBtn);
-        mainBtn.setOnClickListener(this);
         listFriends();
         return v;
     }
@@ -52,17 +50,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.mainBtn:
-                Toast.makeText(getActivity(), "FriendsFragment", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.listFriends:
-                break;
-        }
     }
 
     public void listFriends()
