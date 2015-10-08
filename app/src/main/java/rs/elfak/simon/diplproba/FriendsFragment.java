@@ -7,18 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import android.support.v4.app.FragmentManager;
 
-public class GMapFragment extends Fragment implements OnMapReadyCallback
+public class FriendsFragment extends Fragment implements OnMapReadyCallback
 {
-    public static GMapFragment newInstance(String param1, String param2) {
-        GMapFragment fragment = new GMapFragment();
+    public static FriendsFragment newInstance(String param1, String param2) {
+        FriendsFragment fragment = new FriendsFragment();
         return fragment;
     }
 
@@ -29,7 +25,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback
         //mapFragment.getMapAsync(this);
     }
 
-    public GMapFragment() {
+    public FriendsFragment() {
         // Required empty public constructor
     }
 

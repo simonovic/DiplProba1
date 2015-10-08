@@ -1,6 +1,5 @@
 package rs.elfak.simon.diplproba;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,12 +11,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
 {
@@ -26,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     NavigationView nvDrawer;
     ActionBarDrawerToggle drawerToggle;
     SearchView searchView;
+    private boolean searchOpened = false;
+    private EditText edtSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +51,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent();
 
-        startActivity(new Intent(this, MapActivity.class));
+        //startActivity(new Intent(this, MapActivity.class));
+        LoginActivity.socket.on("findUsersResponse", onFindUsersResponse);
     }
+
+    private Emitter.Listener onFindUsersResponse = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String response;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        response = data.getString("response");
+                    } catch (JSONException e) { return; }
+                    if (!response.equals("nomatch")) {
+                        Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(getApplicationContext(), "Nema takvog korisnika!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
 
     private void setupDrawerContent()
     {
@@ -81,16 +109,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         int pom = menuItem.getItemId();
         switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
-                fragClass = GMapFragment.class;
+                fragClass = FriendsFragment.class;
                 break;
             case R.id.nav_second_fragment:
-                fragClass = GMapFragment.class;
+                fragClass = FriendsFragment.class;
                 break;
             case R.id.sub1:
-                fragClass = GMapFragment.class;
+                fragClass = FriendsFragment.class;
                 break;
             default:
-                fragClass = GMapFragment.class;
+                fragClass = FriendsFragment.class;
         }
         try {
             fragment = (Fragment)fragClass.newInstance();
@@ -99,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
-
     }
 
     @Override
@@ -108,7 +135,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
 
-        //searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+        searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+        searchView.setQueryHint("Pretraži...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String pom = searchView.getQuery().toString();
+                if (!pom.equals(""))
+                    LoginActivity.socket.emit("findUsers", pom);
+                return true;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }
