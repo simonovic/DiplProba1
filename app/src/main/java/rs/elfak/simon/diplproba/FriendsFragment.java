@@ -5,13 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-public class FriendsFragment extends Fragment implements OnMapReadyCallback
+public class FriendsFragment extends Fragment implements View.OnClickListener
 {
     public static FriendsFragment newInstance(String param1, String param2) {
         FriendsFragment fragment = new FriendsFragment();
@@ -21,8 +18,6 @@ public class FriendsFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //SupportMapFragment mapFragment = (SupportMapFragment) mg.findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
     }
 
     public FriendsFragment() {
@@ -30,15 +25,22 @@ public class FriendsFragment extends Fragment implements OnMapReadyCallback
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gmap, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View v = inflater.inflate(R.layout.fragment_friends, container, false);
+        Button mainBtn = (Button)v.findViewById(R.id.mainBtn);
+        mainBtn.setOnClickListener(this);
+        return v;
     }
-    // ovde se dodaju markeri, linije, listenr-i, ili pomera kamera
+
+
     @Override
-    public void onMapReady(GoogleMap gmap) {
-        gmap.setMyLocationEnabled(true);
-        gmap.addMarker(new MarkerOptions().position(new LatLng(43.3192769, 21.899564)));
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.mainBtn:
+                Toast.makeText(getActivity(), "FriendsFragment", Toast.LENGTH_LONG).show();
+                break;
+        }
+
     }
 }

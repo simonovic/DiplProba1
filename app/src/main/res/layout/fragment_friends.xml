@@ -6,10 +6,14 @@
     tools:context="rs.elfak.simon.diplproba.FriendsFragment"
     android:orientation="vertical">
 
-    <fragment
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:id="@+id/mainBtn"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:stateListAnimator="@drawable/my_animator"
+        android:background="@drawable/mybutton" />
 
 </LinearLayout>

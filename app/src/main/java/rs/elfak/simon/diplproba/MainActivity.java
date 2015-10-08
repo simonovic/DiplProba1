@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,23 +17,29 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity
 {
     DrawerLayout mDrawer;
     Toolbar toolbar;
     NavigationView nvDrawer;
     ActionBarDrawerToggle drawerToggle;
     SearchView searchView;
-    private boolean searchOpened = false;
-    private EditText edtSearch;
+    FragmentManager fm;
+    ArrayList<User> users;
+    JSONArray users1;
+
+    boolean searchOpened = false;
+    EditText edtSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = setupDrawerToggle();
         mDrawer.setDrawerListener(drawerToggle);
+        fm = getSupportFragmentManager();
 
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
@@ -65,11 +73,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     JSONObject data = (JSONObject) args[0];
                     try {
                         response = data.getString("response");
-                    } catch (JSONException e) { return; }
-                    if (!response.equals("nomatch")) {
-                        Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
-                    } else
+                    } catch (JSONException e) {
+                        return;
+                    }
+                    if (response.equals("nomatch")) {
                         Toast.makeText(getApplicationContext(), "Nema takvog korisnika!", Toast.LENGTH_SHORT).show();
+                    } else
+                    {
+                        Gson gson = new GsonBuilder().serializeNulls().create();
+                        users = gson.fromJson(response, new TypeToken<ArrayList<User>>(){}.getType());
+                        Toast.makeText(getApplicationContext(), users.get(0).getUname(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -122,8 +136,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         try {
             fragment = (Fragment)fragClass.newInstance();
-        } catch (Exception e) { e.printStackTrace(); }
-        getSupportFragmentManager().beginTransaction().replace(R.id.flContent, fragment).commit();
+        } catch (Exception e) {
+            e.printStackTrace(); }
+        fm.beginTransaction().replace(R.id.flContent, fragment).commit();
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
@@ -175,10 +190,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap gmap) {
-        gmap.addMarker(new MarkerOptions().position(new LatLng(43.3192769, 21.899564)));
     }
 }
