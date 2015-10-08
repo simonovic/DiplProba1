@@ -13,15 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import com.github.nkzawa.emitter.Emitter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,10 +32,7 @@ public class MainActivity extends AppCompatActivity
     SearchView searchView;
     FragmentManager fm;
     ArrayList<User> users;
-    JSONArray users1;
-
-    boolean searchOpened = false;
-    EditText edtSearch;
+    MenuItem searchItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,15 +117,19 @@ public class MainActivity extends AppCompatActivity
         switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 fragClass = FriendsFragment.class;
+                searchItem.setVisible(false);
                 break;
             case R.id.nav_second_fragment:
                 fragClass = FriendsFragment.class;
+                searchItem.setVisible(true);
                 break;
             case R.id.sub1:
                 fragClass = FriendsFragment.class;
+                searchItem.setVisible(false);
                 break;
             default:
                 fragClass = FriendsFragment.class;
+                searchItem.setVisible(false);
         }
         try {
             fragment = (Fragment)fragClass.newInstance();
@@ -148,9 +145,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem searchItem = menu.findItem(R.id.search);
-
-        searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+        searchItem = menu.findItem(R.id.search);
+        searchItem.setVisible(false);
+        searchView = (SearchView)searchItem.getActionView();
         searchView.setQueryHint("Pretraži...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
