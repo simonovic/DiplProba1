@@ -11,14 +11,4 @@
         android:layout_height="wrap_content"
         android:id="@+id/listFriends" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:id="@+id/mainBtn"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:stateListAnimator="@drawable/my_animator"
-        android:background="@drawable/mybutton" />
-
 </LinearLayout>

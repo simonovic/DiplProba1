@@ -1,5 +1,7 @@
 package rs.elfak.simon.diplproba;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -33,6 +35,15 @@ public class MainActivity extends AppCompatActivity
     FragmentManager fm;
     ArrayList<User> users;
     MenuItem searchItem;
+    int userID;
+    String frResp;
+
+    public String getFrResp() {
+        return frResp;
+    }
+
+    SharedPreferences shPref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +55,22 @@ public class MainActivity extends AppCompatActivity
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = setupDrawerToggle();
         mDrawer.setDrawerListener(drawerToggle);
-        fm = getSupportFragmentManager();
-
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         ab.setDisplayHomeAsUpEnabled(true);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent();
 
-        //startActivity(new Intent(this, MapActivity.class));
         LoginActivity.socket.on("findUsersResponse", onFindUsersResponse);
+        LoginActivity.socket.on("findFriendsResponse", onFindFriendsResponse);
+        LoginActivity.socket.emit("findFriends", userID);
+
+        fm = getSupportFragmentManager();
+        shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
+        editor = shPref.edit();
+        //userID = shPref.getInt(Constants.userIDpref, 0);
+        userID = 27; // samo za testiranje
+        //startActivity(new Intent(this, MapActivity.class));
     }
 
     private Emitter.Listener onFindUsersResponse = new Emitter.Listener() {
@@ -66,16 +83,38 @@ public class MainActivity extends AppCompatActivity
                     JSONObject data = (JSONObject) args[0];
                     try {
                         response = data.getString("response");
-                    } catch (JSONException e) {
-                        return;
-                    }
+                    } catch (JSONException e) { return; }
+
                     if (response.equals("nomatch")) {
                         Toast.makeText(getApplicationContext(), "Nema takvog korisnika!", Toast.LENGTH_SHORT).show();
                     } else
                     {
                         Gson gson = new GsonBuilder().serializeNulls().create();
                         users = gson.fromJson(response, new TypeToken<ArrayList<User>>(){}.getType());
-                        Toast.makeText(getApplicationContext(), users.get(0).getUname(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), users.get(0).getFname(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onFindFriendsResponse = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String response;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        response = data.getString("response");
+                    } catch (JSONException e) {
+                        return;
+                    }
+                    if (!response.equals("nofriends")) {
+                        frResp = response;
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Nema prijatelja!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -142,7 +181,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.menu_main, menu);
         searchItem = menu.findItem(R.id.search);
         searchItem.setVisible(false);
@@ -161,7 +199,6 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
         });
-
         return super.onCreateOptionsMenu(menu);
     }
 
