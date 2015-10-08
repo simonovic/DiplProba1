@@ -6,6 +6,11 @@
     tools:context="rs.elfak.simon.diplproba.FriendsFragment"
     android:orientation="vertical">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listFriends" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

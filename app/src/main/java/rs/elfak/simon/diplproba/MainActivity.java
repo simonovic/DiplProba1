@@ -113,15 +113,14 @@ public class MainActivity extends AppCompatActivity
     {
         Fragment fragment = null;
         Class fragClass;
-        int pom = menuItem.getItemId();
         switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 fragClass = FriendsFragment.class;
-                searchItem.setVisible(false);
+                searchItem.setVisible(true);
                 break;
             case R.id.nav_second_fragment:
                 fragClass = FriendsFragment.class;
-                searchItem.setVisible(true);
+                searchItem.setVisible(false);
                 break;
             case R.id.sub1:
                 fragClass = FriendsFragment.class;

@@ -6,15 +6,15 @@
         <item
             android:id="@+id/nav_first_fragment"
             android:icon="@drawable/ic_one"
-            android:title="First" />
+            android:title="@string/first" />
         <item
             android:id="@+id/nav_second_fragment"
             android:icon="@drawable/ic_one"
-            android:title="Second" />
+            android:title="@string/second" />
         <item
             android:id="@+id/nav_third_fragment"
             android:icon="@drawable/ic_one"
-            android:title="Third" />
+            android:title="@string/third" />
     </group>
 
     <group
@@ -23,7 +23,7 @@
         <item
             android:id="@+id/sub1"
             android:icon="@drawable/ic_one"
-            android:title="Sub item 1" />
+            android:title="@string/logout" />
         <item
             android:icon="@drawable/ic_one"
             android:title="Sub item 2" />
