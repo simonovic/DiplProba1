@@ -17,9 +17,9 @@
 
     <string name="title_activity_main">MainActivity</string>
     <string name="search">Search</string>
-    <string name="first">Prijatelji</string>
-    <string name="second">Search</string>
-    <string name="third">Search</string>
+    <string name="first">Predstojeće igre</string>
+    <string name="second">Prijatelji</string>
+    <string name="third">Nova igra</string>
     <string name="logout">Odjava</string>
 
     <string name="title_activity_map">Example action</string>
