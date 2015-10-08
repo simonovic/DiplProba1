@@ -21,9 +21,41 @@ import java.util.Iterator;
 public class FriendsFragment extends Fragment implements View.OnClickListener
 {
     ArrayAdapter<String> friendsAdapter;
+    UserListAdapter frAdap;
     ArrayList<User> friends;
     String friendsID = "";
     View v;
+
+    String[] name ={
+            "Safari",
+            "Camera",
+            "Global",
+            "FireFox",
+            "UC Browser",
+            "Android Folder",
+            "VLC Player",
+            "Cold War",
+            "UC Browser",
+            "Android Folder",
+            "VLC Player",
+            "Cold War"
+    };
+
+    String[] uname ={
+            "Safari1",
+            "Camera1",
+            "Global1",
+            "FireFox1",
+            "UC Browser1",
+            "Android Folder1",
+            "VLC Player1",
+            "Cold War1",
+            "UC Browser1",
+            "Android Folder1",
+            "VLC Player1",
+            "Cold War1"
+    };
+    Integer[] pom = {1,2,3};
 
     public static FriendsFragment newInstance(String param1, String param2) {
         FriendsFragment fragment = new FriendsFragment();
@@ -33,6 +65,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        frAdap = new UserListAdapter(getActivity().getApplicationContext(), name, uname, pom);
     }
 
     public FriendsFragment() {
@@ -73,22 +106,22 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
             br++;
         }*/
 
-        friendsAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1);
+        /*friendsAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1);
         for (int i = 0; i < 4; i++)
         {
             friendsAdapter.add("Item ["+i+"]");
-        }
+        }*/
 
         ListView friendsList = (ListView) v.findViewById(R.id.listFriends);
-        friendsList.setAdapter(friendsAdapter);
-        //friendsList.setOnItemClickListener(friendClickListener);
+        friendsList.setAdapter(frAdap);
+        friendsList.setOnItemClickListener(friendClickListener);
     }
 
-    /*private AdapterView.OnItemClickListener friendClickListener = new AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemClickListener friendClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            Toast.makeText(getActivity(), "Klik na item["+position+"]", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Klik na item["+position+"]", Toast.LENGTH_LONG).show();
         }
-    };*/
+    };
 }
