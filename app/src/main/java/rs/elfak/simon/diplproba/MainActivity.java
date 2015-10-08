@@ -10,7 +10,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Toolbar toolbar;
     NavigationView nvDrawer;
     ActionBarDrawerToggle drawerToggle;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +100,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+
+        //searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
