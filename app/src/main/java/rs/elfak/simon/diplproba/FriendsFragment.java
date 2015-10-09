@@ -6,10 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,7 +20,12 @@ public class FriendsFragment extends Fragment
 {
     UserListAdapter frAdap;
     ArrayList<User> friends;
+    ListView friendsList;
     View v;
+
+    public ListView getFriendsList() {
+        return friendsList;
+    }
 
     public static FriendsFragment newInstance(String param1, String param2) {
         FriendsFragment fragment = new FriendsFragment();
@@ -43,6 +46,8 @@ public class FriendsFragment extends Fragment
     public void listFriends()
     {
         String frList = ((MainActivity)getActivity()).getFrResp();
+        if (frList.equals(""))
+            return;
         Gson gson = new GsonBuilder().serializeNulls().create();
         friends = gson.fromJson(frList, new TypeToken<ArrayList<User>>(){}.getType());
 
@@ -57,16 +62,19 @@ public class FriendsFragment extends Fragment
         String[] unames = uname.toArray(new String[uname.size()]);
         Integer[] pom = {1,2,3};
         frAdap = new UserListAdapter(getActivity().getApplicationContext(), names, unames, pom);
-        ListView friendsList = (ListView) v.findViewById(R.id.listFriends);
+        friendsList = (ListView) v.findViewById(R.id.listFriends);
         friendsList.setAdapter(frAdap);
-        friendsList.setOnItemClickListener(friendClickListener);
+        friendsList.setOnItemLongClickListener(friendClickListener);
     }
 
-    private AdapterView.OnItemClickListener friendClickListener = new AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemLongClickListener friendClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
         {
-            Toast.makeText(getActivity().getApplicationContext(), "Klik na item["+position+"]", Toast.LENGTH_LONG).show();
+            String user = ((TextView)view.findViewById(R.id.tvl)).getText().toString();
+            int ID = friends.get(position).getId();
+            ((MainActivity)getActivity()).showDialog(user, ID);
+            return true;
         }
     };
 }

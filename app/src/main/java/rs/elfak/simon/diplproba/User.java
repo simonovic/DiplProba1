@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 
 public class User
 {
-    int id;
+    int _id;
     String fname;
     String lname;
     String uname;
@@ -13,9 +13,9 @@ public class User
 
     private User() {}
 
-    public User(int id, String fname, String lname, String uname, String imgUrl)
+    public User(int _id, String fname, String lname, String uname, String imgUrl)
     {
-        this.id = id;
+        this._id = _id;
         this.fname = fname;
         this.lname = lname;
         this.uname = uname;
@@ -33,11 +33,11 @@ public class User
     }
 
     public int getId() {
-        return id;
+        return _id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int _id) {
+        this._id = _id;
     }
 
     public String getFname() {

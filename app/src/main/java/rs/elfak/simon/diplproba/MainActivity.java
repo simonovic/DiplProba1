@@ -1,6 +1,7 @@
 package rs.elfak.simon.diplproba;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -36,8 +38,11 @@ public class MainActivity extends AppCompatActivity
     ArrayList<User> users;
     MenuItem searchItem;
     int userID;
-    String frResp;
-    String frResp1;
+    String frResp = "";
+    String frResp1 = "";
+    boolean mode;
+    boolean update = false;
+    int ID;
 
     public String getFrResp() {
         return frResp;
@@ -61,18 +66,47 @@ public class MainActivity extends AppCompatActivity
         ab.setDisplayHomeAsUpEnabled(true);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent();
-
+        //testiranje
+        userID = 28;
         LoginActivity.socket.on("findUsersResponse", onFindUsersResponse);
         LoginActivity.socket.on("findFriendsResponse", onFindFriendsResponse);
+        LoginActivity.socket.on("friendReqResponse", onFriendReqResponse);
         LoginActivity.socket.emit("findFriends", userID);
 
         fm = getSupportFragmentManager();
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         editor = shPref.edit();
-        //userID = shPref.getInt(Constants.userIDpref, 0);
-        userID = 27; // samo za testiranje
+        //userID = shPref.getInt(Constants.userIDpref, 0); // samo za testiranje
         //startActivity(new Intent(this, MapActivity.class));
     }
+
+    private Emitter.Listener onFriendReqResponse = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String response;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        response = data.getString("response");
+                    } catch (JSONException e) { return; }
+                    if (response.equals("unfriend"))
+                    {
+                        update = true;
+                        LoginActivity.socket.emit("findFriends", userID);
+                        Toast.makeText(getApplicationContext(), "Izbacen prijatelj!", Toast.LENGTH_SHORT).show();
+                    } //friend req
+                    else
+                    {
+                        update = true;
+                        LoginActivity.socket.emit("findFriends", userID);
+                        Toast.makeText(getApplicationContext(), "Dodat prijatelj!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    };
 
     private Emitter.Listener onFindUsersResponse = new Emitter.Listener() {
         @Override
@@ -87,7 +121,8 @@ public class MainActivity extends AppCompatActivity
                     } catch (JSONException e) { return; }
 
                     if (response.equals("nomatch")) {
-                        Toast.makeText(getApplicationContext(), "Nema takvog korisnika!", Toast.LENGTH_SHORT).show();
+                        FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                        fr.getFriendsList().setAdapter(null);
                     } else
                     {
                         frResp = response;
@@ -112,10 +147,24 @@ public class MainActivity extends AppCompatActivity
                     } catch (JSONException e) {
                         return;
                     }
+
                     if (!response.equals("nofriends")) {
                         frResp = frResp1 = response;
+                        if (update)
+                        {
+                            FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                            fr.listFriends();
+                            update = false;
+                        }
                     } else {
                         Toast.makeText(getApplicationContext(), "Nema prijatelja!", Toast.LENGTH_SHORT).show();
+                        frResp = frResp1 = "";
+                        if (update)
+                        {
+                            FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                            fr.getFriendsList().setAdapter(null);
+                            update = false;
+                        }
                     }
                 }
             });
@@ -180,6 +229,49 @@ public class MainActivity extends AppCompatActivity
         mDrawer.closeDrawers();
     }
 
+    public void showDialog(String user, int id)
+    {
+        String msg, pom;
+        ID = id;
+        pom = searchView.getQuery().toString();
+        if (pom.equals("")) {
+            msg = "Ukloniti korisnika '" + user + "' iz prijatelja?";
+            mode = true;
+        }
+        else {
+            msg = "Poslati zahtev korisniku '"+user+"'?";
+            mode = false;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Prijateljstvo").setMessage(msg)
+                .setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(mode)
+                        {
+                            JSONObject data = new JSONObject();
+                            try {
+                                data.put("_id", userID);
+                                data.put("friendID", ID);
+                                data.put("mode", "unfriend");
+                            } catch (JSONException e) { e.printStackTrace(); }
+                            LoginActivity.socket.emit("friendReq", data);
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                })
+                .setNegativeButton("Ne", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "No dugme!"+ID, Toast.LENGTH_LONG).show();
+                    }
+                }).show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -194,9 +286,8 @@ public class MainActivity extends AppCompatActivity
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                String pom = searchView.getQuery().toString();
-                if (!pom.equals(""))
-                    LoginActivity.socket.emit("findUsers", pom);
+                if (!newText.equals(""))
+                    LoginActivity.socket.emit("findUsers", newText);
                 else
                 {
                     frResp = frResp1;
