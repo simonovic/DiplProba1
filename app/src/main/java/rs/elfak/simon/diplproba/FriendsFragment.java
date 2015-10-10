@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,6 +25,10 @@ public class FriendsFragment extends Fragment
     ArrayList<User> friends;
     ListView friendsList;
     View v;
+
+    public ArrayList<User> getFriends() {
+        return friends;
+    }
 
     public ListView getFriendsList() {
         return friendsList;

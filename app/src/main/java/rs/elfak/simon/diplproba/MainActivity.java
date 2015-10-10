@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     String frResp1 = "";
     String imgResp = "";
     String imgResp1 = "";
+    String friends;
     boolean mode;
     boolean update = false;
     int ID;
@@ -177,18 +178,25 @@ public class MainActivity extends AppCompatActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String response, img;
+                    String response, img, pom;
                     JSONObject data = (JSONObject) args[0];
                     try {
                         response = data.getString("response");
                         img = data.getString("img");
-                    } catch (JSONException e) { return; }
+                        pom = data.getString("friends");
+                    } catch (JSONException e) {
+                        return;
+                    }
+
+                    if (pom.length() > 0) {
+                        friends = pom.substring(1, pom.length() - 1);
+                        Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_SHORT).show();
+                    }
 
                     if (!response.equals("nofriends")) {
                         frResp = frResp1 = response;
                         imgResp = imgResp1 = img;
-                        if (update)
-                        {
+                        if (update) {
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
                             fr.listFriends();
                             update = false;
@@ -197,8 +205,7 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(getApplicationContext(), "Nema prijatelja!", Toast.LENGTH_SHORT).show();
                         frResp = frResp1 = "";
                         imgResp = imgResp1 = "";
-                        if (update)
-                        {
+                        if (update) {
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
                             fr.getFriendsList().setAdapter(null);
                             update = false;
@@ -269,10 +276,11 @@ public class MainActivity extends AppCompatActivity
 
     public void showDialog(String user, int id)
     {
-        String msg, pom;
+        String msg;
         ID = id;
-        pom = searchView.getQuery().toString();
-        if (pom.equals("")) {
+        FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+        users = fr.getFriends();
+        if (friends.contains(id+"")) {
             msg = "Ukloniti korisnika '" + user + "' iz prijatelja?";
             mode = true;
         }
@@ -280,7 +288,6 @@ public class MainActivity extends AppCompatActivity
             msg = "Poslati zahtev korisniku '"+user+"'?";
             mode = false;
         }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Prijateljstvo").setMessage(msg)
                 .setPositiveButton("Da", new DialogInterface.OnClickListener() {

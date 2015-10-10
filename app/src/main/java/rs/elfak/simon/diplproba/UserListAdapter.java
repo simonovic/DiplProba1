@@ -16,7 +16,6 @@ public class UserListAdapter extends ArrayAdapter<String>
     Context context;
     String[] name;
     String[] uname;
-    //String[] img;
     ArrayList<Bitmap> img;
 
     public UserListAdapter(Context context, String[] name, String[] uname, ArrayList<Bitmap> img)
