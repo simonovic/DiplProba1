@@ -1,11 +1,15 @@
 package rs.elfak.simon.diplproba;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,9 +52,9 @@ public class FriendsFragment extends Fragment
         String frList = ((MainActivity)getActivity()).getFrResp();
         if (frList.equals(""))
             return;
+
         Gson gson = new GsonBuilder().serializeNulls().create();
         friends = gson.fromJson(frList, new TypeToken<ArrayList<User>>(){}.getType());
-
         ArrayList<String> name = new ArrayList<String>();
         ArrayList<String> uname = new ArrayList<String>();
         for (Iterator<User> u = friends.iterator(); u.hasNext(); ) {
@@ -60,8 +64,16 @@ public class FriendsFragment extends Fragment
         }
         String[] names = name.toArray(new String[name.size()]);
         String[] unames = uname.toArray(new String[uname.size()]);
-        Integer[] pom = {1,2,3};
-        frAdap = new UserListAdapter(getActivity().getApplicationContext(), names, unames, pom);
+        //Bitmap[] imgBitmap = new Bitmap[];
+        ArrayList<Bitmap> imgBitmap = new ArrayList<Bitmap>();
+        String[] encImg = ((MainActivity)getActivity()).getImgResp().split("bratzna");
+        for (int i = 0; i < encImg.length; i++)
+        {
+            byte[] decodedString = Base64.decode(encImg[i], Base64.DEFAULT);
+            Bitmap bm = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            imgBitmap.add(bm);
+        }
+        frAdap = new UserListAdapter(getActivity().getApplicationContext(), names, unames, imgBitmap);
         friendsList = (ListView) v.findViewById(R.id.listFriends);
         friendsList.setAdapter(frAdap);
         friendsList.setOnItemLongClickListener(friendClickListener);

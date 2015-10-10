@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -14,9 +16,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.google.gson.Gson;
@@ -40,13 +45,14 @@ public class MainActivity extends AppCompatActivity
     int userID;
     String frResp = "";
     String frResp1 = "";
+    String imgResp = "";
+    String imgResp1 = "";
     boolean mode;
     boolean update = false;
     int ID;
 
-    public String getFrResp() {
-        return frResp;
-    }
+    public String getFrResp() { return frResp; }
+    public String getImgResp() { return imgResp; }
 
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
@@ -66,11 +72,14 @@ public class MainActivity extends AppCompatActivity
         ab.setDisplayHomeAsUpEnabled(true);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent();
+
         //testiranje
         userID = 28;
+
         LoginActivity.socket.on("findUsersResponse", onFindUsersResponse);
         LoginActivity.socket.on("findFriendsResponse", onFindFriendsResponse);
         LoginActivity.socket.on("friendReqResponse", onFriendReqResponse);
+        LoginActivity.socket.on("imgReqResponse", onImgResponse);
         LoginActivity.socket.emit("findFriends", userID);
 
         fm = getSupportFragmentManager();
@@ -79,6 +88,32 @@ public class MainActivity extends AppCompatActivity
         //userID = shPref.getInt(Constants.userIDpref, 0); // samo za testiranje
         //startActivity(new Intent(this, MapActivity.class));
     }
+
+    private Emitter.Listener onImgResponse = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String response;
+                    String fORu;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        response = data.getString("response");
+                        fORu = data.getString("fORu");
+                    } catch (JSONException e) { return; }
+
+                    if (fORu.equals("f")) {
+                        Toast.makeText(getApplicationContext(), "f", Toast.LENGTH_SHORT).show();
+                        imgResp = imgResp1 = response;
+                    } else {
+                        Toast.makeText(getApplicationContext(), "u", Toast.LENGTH_SHORT).show();
+                        imgResp = response;
+                    }
+                }
+            });
+        }
+    };
 
     private Emitter.Listener onFriendReqResponse = new Emitter.Listener() {
         @Override
@@ -96,7 +131,7 @@ public class MainActivity extends AppCompatActivity
                         update = true;
                         LoginActivity.socket.emit("findFriends", userID);
                         Toast.makeText(getApplicationContext(), "Izbacen prijatelj!", Toast.LENGTH_SHORT).show();
-                    } //friend req
+                    }
                     else
                     {
                         update = true;
@@ -114,10 +149,11 @@ public class MainActivity extends AppCompatActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String response;
+                    String response, img;
                     JSONObject data = (JSONObject) args[0];
                     try {
                         response = data.getString("response");
+                        img = data.getString("img");
                     } catch (JSONException e) { return; }
 
                     if (response.equals("nomatch")) {
@@ -126,6 +162,7 @@ public class MainActivity extends AppCompatActivity
                     } else
                     {
                         frResp = response;
+                        imgResp = img;
                         FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
                         fr.listFriends();
                     }
@@ -140,16 +177,16 @@ public class MainActivity extends AppCompatActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String response;
+                    String response, img;
                     JSONObject data = (JSONObject) args[0];
                     try {
                         response = data.getString("response");
-                    } catch (JSONException e) {
-                        return;
-                    }
+                        img = data.getString("img");
+                    } catch (JSONException e) { return; }
 
                     if (!response.equals("nofriends")) {
                         frResp = frResp1 = response;
+                        imgResp = imgResp1 = img;
                         if (update)
                         {
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
@@ -159,6 +196,7 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         Toast.makeText(getApplicationContext(), "Nema prijatelja!", Toast.LENGTH_SHORT).show();
                         frResp = frResp1 = "";
+                        imgResp = imgResp1 = "";
                         if (update)
                         {
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
@@ -258,7 +296,7 @@ public class MainActivity extends AppCompatActivity
                             } catch (JSONException e) { e.printStackTrace(); }
                             LoginActivity.socket.emit("friendReq", data);
                         }
-                        else
+                        else //posalji zahtev za prijateljstvo
                         {
 
                         }
@@ -287,10 +325,18 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (!newText.equals(""))
-                    LoginActivity.socket.emit("findUsers", newText);
+                {
+                    JSONObject data = new JSONObject();
+                    try {
+                        data.put("_id", userID);
+                        data.put("text", newText);
+                    } catch (JSONException e) { e.printStackTrace(); }
+                    LoginActivity.socket.emit("findUsers", data);
+                }
                 else
                 {
                     frResp = frResp1;
+                    imgResp = imgResp1;
                     FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
                     fr.listFriends();
                 }

@@ -50,7 +50,7 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         socket.on("registrationResponse", onRegResponse);
-        socket.on("chPassResponse", onChPassResponse);
+        socket.on("chUnameResponse", onChPassResponse);
         fname = (EditText)findViewById(R.id.fname);
         lname = (EditText)findViewById(R.id.lname);
         email = (EditText)findViewById(R.id.email);
@@ -67,7 +67,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 if (up.length() < 6)
                     uname.setError("Minimum 6 karaktera!");
                 else
-                    socket.emit("checkPass", up);
+                    socket.emit("checkUname", up);
             }
 
             @Override
@@ -135,13 +135,13 @@ public class RegistrationActivity extends AppCompatActivity {
                             data.put("id", userID);
                             data.put("buff", encoded);
                         } catch (JSONException e) { e.printStackTrace(); }
-                        LoginActivity.socket.emit("regImg", data);
+                        //LoginActivity.socket.emit("regImg", data);
                         fname.setText("");
                         lname.setText("");
                         email.setText("");
                         uname.setText("");
                         upass.setText("");
-                        //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
                 }
             });
