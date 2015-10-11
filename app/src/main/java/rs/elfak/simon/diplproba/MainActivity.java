@@ -188,10 +188,8 @@ public class MainActivity extends AppCompatActivity
                         return;
                     }
 
-                    if (pom.length() > 0) {
+                    if (pom.length() > 0)
                         friends = pom.substring(1, pom.length() - 1);
-                        Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_SHORT).show();
-                    }
 
                     if (!response.equals("nofriends")) {
                         frResp = frResp1 = response;
