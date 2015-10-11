@@ -42,7 +42,7 @@ public class ProfileActivity extends Activity
         uname = bundle.getString("uname");
         nameET.setText(name);
         unameET.setText(uname);
-        Button btn = (Button)findViewById(R.id.profBtn);
+        //Button btn = (Button)findViewById(R.id.profBtn);
     }
 
     private Emitter.Listener onProfImgReqResponse = new Emitter.Listener() {
