@@ -64,8 +64,10 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Toast.makeText(getApplicationContext(), "Kucanje!", Toast.LENGTH_SHORT).show();
                 String up = uname.getText().toString();
-                if (up.length() < 6)
+                if (up.length() < 6) {
                     uname.setError("Minimum 6 karaktera!");
+                    uName = false;
+                }
                 else
                     socket.emit("checkUname", up);
             }
@@ -97,9 +99,14 @@ public class RegistrationActivity extends AppCompatActivity {
                     } catch (JSONException e) {  return; }
 
                     if (response.equals("busy"))
+                    {
                         uname.setError("Zauzato");
-                    else if (response.equals("free"))
+                        uName = false;
+                    }
+                    else if (response.equals("free")) {
+                        uName = true;
                         uname.setError("Slobodno");
+                    }
                 }
             });
         }
@@ -125,17 +132,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         editor.putInt(Constants.userIDpref, userID);
                         editor.putString(Constants.userNamepref, userName);
                         //editor.commit();
-                        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.user);
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bm.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                        byte[] byteArray = byteArrayOutputStream .toByteArray();
-                        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT); //radi i bez ovog
-                        data = new JSONObject();
-                        try {
-                            data.put("id", userID);
-                            data.put("buff", encoded);
-                        } catch (JSONException e) { e.printStackTrace(); }
-                        //LoginActivity.socket.emit("regImg", data);
                         fname.setText("");
                         lname.setText("");
                         email.setText("");
@@ -165,11 +161,16 @@ public class RegistrationActivity extends AppCompatActivity {
         if (fn.isEmpty() || ln.isEmpty() || em.isEmpty() || un.isEmpty() || up.isEmpty()) {
             Toast.makeText(this, "Popunite sva polja!", Toast.LENGTH_SHORT).show();
         }
-        /*else if (!uName) {
+        else if (!uName) {
             Toast.makeText(this, "Nevalidno korisničko ime!", Toast.LENGTH_SHORT).show();
-        }*/
+        }
         else {
             userName  = un;
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.user);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT); //radi i bez ovog
             JSONObject data = new JSONObject();
             try {
                 data.put("fname", fn);
@@ -177,6 +178,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 data.put("email", em);
                 data.put("uname", un);
                 data.put("upass", up);
+                data.put("buff", encoded);
             } catch (JSONException e) { e.printStackTrace(); }
             LoginActivity.socket.emit("registrationRequest", data);
         }

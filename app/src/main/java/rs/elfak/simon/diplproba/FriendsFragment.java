@@ -1,5 +1,6 @@
 package rs.elfak.simon.diplproba;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -67,7 +69,6 @@ public class FriendsFragment extends Fragment
         }
         String[] names = name.toArray(new String[name.size()]);
         String[] unames = uname.toArray(new String[uname.size()]);
-        //Bitmap[] imgBitmap = new Bitmap[];
         ArrayList<Bitmap> imgBitmap = new ArrayList<Bitmap>();
         String[] encImg = ((MainActivity)getActivity()).getImgResp().split("bratzna");
         for (int i = 0; i < encImg.length; i++)
@@ -80,6 +81,7 @@ public class FriendsFragment extends Fragment
         friendsList = (ListView) v.findViewById(R.id.listFriends);
         friendsList.setAdapter(frAdap);
         friendsList.setOnItemLongClickListener(friendClickListener);
+        friendsList.setOnItemClickListener(userClickListener);
     }
 
     private AdapterView.OnItemLongClickListener friendClickListener = new AdapterView.OnItemLongClickListener() {
@@ -90,6 +92,20 @@ public class FriendsFragment extends Fragment
             int ID = friends.get(position).getId();
             ((MainActivity)getActivity()).showDialog(user, ID);
             return true;
+        }
+    };
+
+    private AdapterView.OnItemClickListener userClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            int uid = friends.get(position).getId();
+            String name = ((TextView)view.findViewById(R.id.tvl)).getText().toString();
+            String uname = ((TextView)view.findViewById(R.id.tvm)).getText().toString();
+            Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+            i.putExtra("id", uid);
+            i.putExtra("name", name);
+            i.putExtra("uname", uname);
+            startActivity(i);
         }
     };
 }
