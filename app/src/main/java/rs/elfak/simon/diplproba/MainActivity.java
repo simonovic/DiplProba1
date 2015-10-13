@@ -30,7 +30,6 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
-import ws.wamp.jawampa.*;
 
 public class MainActivity extends AppCompatActivity
 {
