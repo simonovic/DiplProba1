@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         setupDrawerContent();
 
         //testiranje
-        userID = 28;
+        userID = 25;
 
         LoginActivity.socket.on("findUsersResponse", onFindUsersResponse);
         LoginActivity.socket.on("findFriendsResponse", onFindFriendsResponse);
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity
         Class fragClass;
         switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
-                fragClass = FriendsFragment.class;
+                fragClass = MainFragment.class;
                 searchItem.setVisible(false);
                 break;
             case R.id.nav_second_fragment:

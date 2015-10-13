@@ -67,7 +67,7 @@ public class ProfileActivity extends Activity
 
 
         /////////////////////////////////////////
-        connectWampClient();
+        //connectWampClient();
         ////////////////////////////////////////
     }
 

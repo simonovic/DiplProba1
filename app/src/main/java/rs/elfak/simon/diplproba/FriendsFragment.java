@@ -69,6 +69,7 @@ public class FriendsFragment extends Fragment
         }
         String[] names = name.toArray(new String[name.size()]);
         String[] unames = uname.toArray(new String[uname.size()]);
+
         ArrayList<Bitmap> imgBitmap = new ArrayList<Bitmap>();
         String[] encImg = ((MainActivity)getActivity()).getImgResp().split("bratzna");
         for (int i = 0; i < encImg.length; i++)

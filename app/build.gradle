@@ -4,6 +4,11 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
     defaultConfig {
         applicationId "rs.elfak.simon.diplproba"
         minSdkVersion 15
@@ -28,5 +33,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.google.code.gson:gson:2.3'
     compile 'io.reactivex:rxjava:1.0.1'
-    compile files('libs/jawampa-netty-0.4.1.jar', 'libs/jawampa-core-0.4.1.jar')
+    compile files('libs/jawampa-netty-0.4.1.jar', 'libs/jawampa-core-0.4.1.jar'/*, 'libs/jackson-core-2.6.3.jar', 'libs/jackson-databind-2.6.3.jar', 'libs/jackson-annotations-2.6.3.jar'*/)
 }
