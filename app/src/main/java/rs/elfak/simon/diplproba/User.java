@@ -22,7 +22,7 @@ public class User
         this.imgUrl = imgUrl;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         String s = null;
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -30,7 +30,7 @@ public class User
         Gson gson = gsonBuilder.create();
         s = gson.toJson(this);
         return s;
-    }
+    }*/
 
     public int getId() {
         return _id;

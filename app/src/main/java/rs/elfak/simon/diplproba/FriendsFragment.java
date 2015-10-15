@@ -19,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class FriendsFragment extends Fragment
@@ -62,13 +63,20 @@ public class FriendsFragment extends Fragment
         friends = gson.fromJson(frList, new TypeToken<ArrayList<User>>(){}.getType());
         ArrayList<String> name = new ArrayList<String>();
         ArrayList<String> uname = new ArrayList<String>();
+        String pom[] = ((MainActivity)getActivity()).getFriends().split(",");
+        ArrayList<String> imaf = new ArrayList<String>();
         for (Iterator<User> u = friends.iterator(); u.hasNext(); ) {
             User fr = u.next();
-            name.add(fr.getFname()+" "+fr.getLname());
+            name.add(fr.getFname() + " " + fr.getLname());
             uname.add(fr.getUname());
+            if (Arrays.asList(pom).contains(fr.getId() + ""))
+                imaf.add("yes");
+            else
+                imaf.add("no");
         }
         String[] names = name.toArray(new String[name.size()]);
         String[] unames = uname.toArray(new String[uname.size()]);
+        String[] imafs = imaf.toArray(new String[imaf.size()]);
 
         ArrayList<Bitmap> imgBitmap = new ArrayList<Bitmap>();
         String[] encImg = ((MainActivity)getActivity()).getImgResp().split("bratzna");
@@ -78,7 +86,8 @@ public class FriendsFragment extends Fragment
             Bitmap bm = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             imgBitmap.add(bm);
         }
-        frAdap = new UserListAdapter(getActivity().getApplicationContext(), names, unames, imgBitmap);
+
+        frAdap = new UserListAdapter(getActivity().getApplicationContext(), names, unames, imgBitmap, imafs);
         friendsList = (ListView) v.findViewById(R.id.listFriends);
         friendsList.setAdapter(frAdap);
         friendsList.setOnItemLongClickListener(friendClickListener);

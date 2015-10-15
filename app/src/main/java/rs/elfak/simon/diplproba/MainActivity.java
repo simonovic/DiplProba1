@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
 
     public String getFrResp() { return frResp; }
     public String getImgResp() { return imgResp; }
+    public String getFriends() { return  friends; }
 
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity
         fm = getSupportFragmentManager();
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         editor = shPref.edit();
+        fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance()).commit();
         //userID = shPref.getInt(Constants.userIDpref, 0); // samo za testiranje
         //startActivity(new Intent(this, MapActivity.class));
     }
