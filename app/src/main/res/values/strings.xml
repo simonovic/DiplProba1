@@ -21,6 +21,13 @@
     <string name="second">Prijatelji</string>
     <string name="third">Nova igra</string>
     <string name="logout">Odjava</string>
+    <string name="name">Naziv:</string>
+    <string name="com">Opis:</string>
+    <string name="creator">Kreirao:</string>
+    <string name="date">Vreme:</string>
+    <string name="address">Mesto:</string>
+    <string name="conf">Dolaze:</string>
+    <string name="inv">Pozvani:</string>
 
     <string name="title_activity_map">Example action</string>
     <string name="title_activity_profile">Profil</string>

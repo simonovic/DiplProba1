@@ -50,13 +50,17 @@ public class MainActivity extends AppCompatActivity
     boolean mode;
     boolean update = false;
     int ID;
+    SharedPreferences shPref;
+    SharedPreferences.Editor editor;
+    String gameResp;
+    String gameResp1;
+    String games;
 
     public String getFrResp() { return frResp; }
     public String getImgResp() { return imgResp; }
     public String getFriends() { return  friends; }
-
-    SharedPreferences shPref;
-    SharedPreferences.Editor editor;
+    public String getGameResp() {return gameResp; }
+    public String getGames() {return games; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

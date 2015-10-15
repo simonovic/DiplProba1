@@ -29,31 +29,75 @@ public class Game
         this.invitedUsersID = invitedUsersID;
     }
 
-    public int get_id() { return _id; }
+    public int get_id() {
+        return _id;
+    }
 
-    public void set_id(int _id) { this._id = _id; }
+    public void set_id(int _id) {
+        this._id = _id;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public String getCreator() { return creator; }
+    public String getCreator() {
+        return creator;
+    }
 
-    public void setCreator(String creator) { this.creator = creator; }
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
 
-    public String getDate() { return date; }
+    public String getDate() {
+        return date;
+    }
 
-    public void setDate(String date) { this.date = date; }
+    public void setDate(String date) {
+        this.date = date;
+    }
 
-    public int[] getConfirmedUsersID() { return confirmedUsersID; }
+    public String getAddress() {
+        return address;
+    }
 
-    public void setConfirmedUsersID(int[] confirmedUsersID) { this.confirmedUsersID = confirmedUsersID; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public int[] getInvitedUsersID() { return invitedUsersID; }
+    public LatLng getLatlng() {
+        return latlng;
+    }
 
-    public void setInvitedUsersID(int[] invitedUsersID) { this.invitedUsersID = invitedUsersID; }
+    public void setLatlng(LatLng latlng) {
+        this.latlng = latlng;
+    }
+
+    public int[] getConfirmedUsersID() {
+        return confirmedUsersID;
+    }
+
+    public void setConfirmedUsersID(int[] confirmedUsersID) {
+        this.confirmedUsersID = confirmedUsersID;
+    }
+
+    public int[] getInvitedUsersID() {
+        return invitedUsersID;
+    }
+
+    public void setInvitedUsersID(int[] invitedUsersID) {
+        this.invitedUsersID = invitedUsersID;
+    }
 }
