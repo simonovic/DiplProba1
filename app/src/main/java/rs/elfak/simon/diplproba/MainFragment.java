@@ -3,11 +3,13 @@ package rs.elfak.simon.diplproba;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -21,11 +23,7 @@ public class MainFragment extends Fragment
     View v;
     RecyclerView recView;
     ArrayList<Game> games;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    SwipeRefreshLayout srl;
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
@@ -40,8 +38,21 @@ public class MainFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, container, false);
+        srl = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshGames();
+            }
+        });
         listGames();
         return v;
+    }
+
+    public void refreshGames()
+    {
+        Toast.makeText(getActivity().getApplicationContext(), "Radi refresh!", Toast.LENGTH_LONG).show();
+        srl.setRefreshing(false);
     }
 
     public void listGames()

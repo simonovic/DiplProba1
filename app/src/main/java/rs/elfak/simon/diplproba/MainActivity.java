@@ -259,8 +259,8 @@ public class MainActivity extends AppCompatActivity
                 fragClass = FriendsFragment.class;
                 searchItem.setVisible(true);
                 break;
-            case R.id.sub1:
-                fragClass = FriendsFragment.class;
+            case R.id.nav_third_fragment:
+                fragClass = NewGameFragment.class;
                 searchItem.setVisible(false);
                 break;
             default:
