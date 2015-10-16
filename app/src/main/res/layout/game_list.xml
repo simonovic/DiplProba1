@@ -34,35 +34,27 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/name"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
+                    android:paddingTop="2dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/creator"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
+                    android:text="@string/creator" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/date"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
+                    android:text="@string/date" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/address"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
+                    android:text="@string/address" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/com"
-                    android:paddingTop="2dp"
                     android:paddingBottom="2dp" />
             </LinearLayout>
 
@@ -77,35 +69,28 @@
                     android:text="@string/name"
                     android:id="@+id/nameTV"
                     android:textColor="#466bbc"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
+                    android:paddingTop="2dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/creator"
                     android:id="@+id/creatorTV"
-                    android:textColor="#466bbc"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
+                    android:textColor="#466bbc" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/date"
                     android:id="@+id/dataTV"
-                    android:textColor="#466bbc"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
+                    android:textColor="#466bbc" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/address"
                     android:id="@+id/addressTV"
-                    android:textColor="#466bbc"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
+                    android:textColor="#466bbc" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,7 +98,6 @@
                     android:text="@string/com"
                     android:id="@+id/comTV"
                     android:textColor="#466bbc"
-                    android:paddingTop="2dp"
                     android:paddingBottom="2dp" />
             </LinearLayout>
         </LinearLayout>

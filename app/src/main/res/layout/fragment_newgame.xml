@@ -115,13 +115,21 @@
                 android:padding="7dp" />
         </android.support.design.widget.TextInputLayout>
 
-        <ListView
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/numFrTIL"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp">
-        </ListView>
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/numFr"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="@string/numfr"
+                android:background="@drawable/myedittext"
+                android:padding="7dp"
+                android:focusableInTouchMode="false"/>
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:layout_width="match_parent"

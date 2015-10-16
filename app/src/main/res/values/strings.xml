@@ -35,6 +35,7 @@
     <string name="choose1">Pozovi prijatelje</string>
     <string name="name1">Naziv</string>
     <string name="com1">Opis</string>
+    <string name="numfr">Broj pozvanih prijatelja:</string>
 
 
     <string name="title_activity_map">Example action</string>

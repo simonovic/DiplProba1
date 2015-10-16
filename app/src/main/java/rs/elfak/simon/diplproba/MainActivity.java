@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,6 +31,10 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -55,7 +60,14 @@ public class MainActivity extends AppCompatActivity
     String gameResp;
     String gameResp1;
     String games;
+    boolean choosenFr[];
 
+    public boolean[] getChoosenFr() {
+        return choosenFr;
+    }
+    public void setChoosenFr(boolean[] choosenFr) {
+        this.choosenFr = choosenFr;
+    }
     public String getFrResp() { return frResp; }
     public String getImgResp() { return imgResp; }
     public String getFriends() { return  friends; }
@@ -85,6 +97,7 @@ public class MainActivity extends AppCompatActivity
         LoginActivity.socket.on("findFriendsResponse", onFindFriendsResponse);
         LoginActivity.socket.on("friendReqResponse", onFriendReqResponse);
         LoginActivity.socket.on("imgReqResponse", onImgResponse);
+        LoginActivity.socket.on("newGameReqResponse", onNewGameReqResponse);
         LoginActivity.socket.emit("findFriends", userID);
 
         fm = getSupportFragmentManager();
@@ -94,6 +107,23 @@ public class MainActivity extends AppCompatActivity
         //userID = shPref.getInt(Constants.userIDpref, 0); // samo za testiranje
         //startActivity(new Intent(this, MapActivity.class));
     }
+
+    private Emitter.Listener onNewGameReqResponse = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String response;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        response = data.getString("response");
+                    } catch (JSONException e) { return; }
+                    Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
 
     private Emitter.Listener onImgResponse = new Emitter.Listener() {
         @Override
@@ -332,19 +362,19 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!newText.equals(""))
-                {
+                if (!newText.equals("")) {
                     JSONObject data = new JSONObject();
                     try {
                         data.put("_id", userID);
                         data.put("text", newText);
-                    } catch (JSONException e) { e.printStackTrace(); }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     LoginActivity.socket.emit("findUsers", data);
-                }
-                else
-                {
+                } else {
                     frResp = frResp1;
                     imgResp = imgResp1;
                     FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
@@ -377,5 +407,11 @@ public class MainActivity extends AppCompatActivity
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public void populateChFr()
+    {
+        NewGameFragment ngf = (NewGameFragment) fm.findFragmentById(R.id.flContent);
+        ngf.populateChoosenFr();
     }
 }
