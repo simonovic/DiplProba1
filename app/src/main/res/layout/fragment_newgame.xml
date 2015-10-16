@@ -1,14 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:focusableInTouchMode="true">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button2" />
-</LinearLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/nameTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:hint="@string/name1"
+                android:background="@drawable/myedittext"
+                android:padding="7dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="20">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_weight="15"
+                android:id="@+id/timeTIL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/time"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/time"
+                    android:background="@drawable/myedittext"
+                    android:padding="7dp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="37dp"
+                android:text="@string/choose"
+                android:id="@+id/timeBtn"
+                android:layout_marginTop="10dp"
+                android:stateListAnimator="@drawable/my_animator"
+                android:background="@drawable/mybutton"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="5.60"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="20">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_weight="15"
+                android:id="@+id/dateTIL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/date"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/date1"
+                    android:background="@drawable/myedittext"
+                    android:padding="7dp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="37dp"
+                android:text="@string/choose"
+                android:id="@+id/dateBtn"
+                android:layout_marginTop="10dp"
+                android:stateListAnimator="@drawable/my_animator"
+                android:background="@drawable/mybutton"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="5.60"
+                android:layout_marginRight="10dp" />
+
+        </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/comTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/com"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:hint="@string/com1"
+                android:background="@drawable/myedittext"
+                android:padding="7dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listView"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp">
+        </ListView>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/choose1"
+            android:id="@+id/chUser"
+            android:layout_marginTop="10dp"
+            android:stateListAnimator="@drawable/my_animator"
+            android:background="@drawable/mybutton"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/createGame"
+            android:id="@+id/createGame"
+            android:layout_marginTop="20dp"
+            android:stateListAnimator="@drawable/my_animator"
+            android:background="@drawable/mybutton"
+            android:layout_marginBottom="20dp" />
+
+    </LinearLayout>
+</ScrollView>

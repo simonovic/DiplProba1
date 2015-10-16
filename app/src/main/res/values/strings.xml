@@ -28,6 +28,14 @@
     <string name="address">Mesto:</string>
     <string name="conf">Dolaze:</string>
     <string name="inv">Pozvani:</string>
+    <string name="createGame">Kreiraj igru</string>
+    <string name="date1">Datum</string>
+    <string name="time">Vreme</string>
+    <string name="choose">Izaberi</string>
+    <string name="choose1">Pozovi prijatelje</string>
+    <string name="name1">Naziv</string>
+    <string name="com1">Opis</string>
+
 
     <string name="title_activity_map">Example action</string>
     <string name="title_activity_profile">Profil</string>
