@@ -39,7 +39,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
 {
     View v;
     Button dateBtn, timeBtn, invFr, createGame;
-    EditText name, time, date, comm, numChoosenFr;
+    EditText name, time, date, comm, numChoosenFr, address;
     ArrayList<User> friends, choosenFr;
     boolean[] chFrBool;
     static int trueCnt = 0;
@@ -145,6 +145,15 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
         date = (EditText)v.findViewById(R.id.date);
         comm = (EditText)v.findViewById(R.id.com);
         numChoosenFr = (EditText)v.findViewById(R.id.numFr);
+        address = (EditText)v.findViewById(R.id.address);
+        address.setFocusable(false);
+        address.setClickable(true);
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity().getApplicationContext(), "Radi klik na adresu!", Toast.LENGTH_SHORT).show();
+            }
+        });
         choosenFr = new ArrayList<User>();
         String frList = ((MainActivity)getActivity()).getFrResp();
         if (!frList.equals("")) {

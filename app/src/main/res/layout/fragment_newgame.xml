@@ -48,7 +48,8 @@
                     android:layout_marginTop="20dp"
                     android:hint="@string/time"
                     android:background="@drawable/myedittext"
-                    android:padding="7dp" />
+                    android:padding="7dp"
+                    android:focusableInTouchMode="false"/>
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -83,7 +84,8 @@
                     android:layout_marginTop="20dp"
                     android:hint="@string/date1"
                     android:background="@drawable/myedittext"
-                    android:padding="7dp" />
+                    android:padding="7dp"
+                    android:focusableInTouchMode="false"/>
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -99,6 +101,22 @@
                 android:layout_marginRight="10dp" />
 
         </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/addressTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/address"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:hint="@string/add"
+                android:background="@drawable/myedittext"
+                android:padding="7dp"
+                android:focusableInTouchMode="false"/>
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/comTIL"
