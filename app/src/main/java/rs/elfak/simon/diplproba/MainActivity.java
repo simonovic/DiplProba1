@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity
     String games;
     boolean choosenFr[];
 
+    public int getUserID() {
+        return userID;
+    }
     public boolean[] getChoosenFr() {
         return choosenFr;
     }
@@ -104,8 +107,10 @@ public class MainActivity extends AppCompatActivity
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         editor = shPref.edit();
         fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance()).commit();
-        //userID = shPref.getInt(Constants.userIDpref, 0); // samo za testiranje
-        //startActivity(new Intent(this, MapActivity.class));
+        nvDrawer.getMenu().getItem(0).setChecked(true);
+
+        //userID = shPref.getInt(Constants.userIDpref, 0);
+        //startActivity(new Intent(this, MapActivity.class)); // samo za testiranje
     }
 
     private Emitter.Listener onNewGameReqResponse = new Emitter.Listener() {
@@ -120,6 +125,18 @@ public class MainActivity extends AppCompatActivity
                         response = data.getString("response");
                     } catch (JSONException e) { return; }
                     Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                    if (response.equals("success"))
+                    {
+                        Fragment fragment = null;
+                        try {
+                            fragment = (Fragment)MainFragment.class.newInstance();
+                        } catch (Exception e) {
+                            e.printStackTrace(); }
+                        fm.beginTransaction().replace(R.id.flContent, fragment).commit();
+                        nvDrawer.getMenu().getItem(0).setChecked(true);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Neuspelo kreirenje igre!", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
