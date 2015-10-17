@@ -6,25 +6,29 @@ public class Game
 {
     int _id;
     String name;
-    String description;
+    String desc;
+    String creatorID;
     String creator;
-    String date;
-    String address;  //adresa
-    LatLng latlng;
+    String datetime;
+    String address;
+    double lat;
+    double lng;
     int[] confirmedUsersID;
     int[] invitedUsersID;
 
     private Game() {}
 
-    public Game(int _id, String name, String description, String creator, String date, String address, LatLng latlng, int[] confirmedUsersID, int[] invitedUsersID)
+    public Game(int _id, String name, String desc, String creatorID, String creator, String date, String address, double lat, double lng, int[] confirmedUsersID, int[] invitedUsersID)
     {
         this._id = _id;
         this.name = name;
-        this.description = description;
+        this.desc = desc;
+        this.creatorID = creatorID;
         this.creator = creator;
-        this.date = date;
+        this.datetime = date;
         this.address = address;
-        this.latlng = latlng;
+        this.lat = lat;
+        this.lng = lng;
         this.confirmedUsersID = confirmedUsersID;
         this.invitedUsersID = invitedUsersID;
     }
@@ -45,12 +49,20 @@ public class Game
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getCreatorID() {
+        return creatorID;
+    }
+
+    public void setCreatorID(String creatorID) {
+        this.creatorID = creatorID;
     }
 
     public String getCreator() {
@@ -61,12 +73,12 @@ public class Game
         this.creator = creator;
     }
 
-    public String getDate() {
-        return date;
+    public String getDatetime() {
+        return datetime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
     }
 
     public String getAddress() {
@@ -77,12 +89,20 @@ public class Game
         this.address = address;
     }
 
-    public LatLng getLatlng() {
-        return latlng;
+    public double getLat() {
+        return lat;
     }
 
-    public void setLatlng(LatLng latlng) {
-        this.latlng = latlng;
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 
     public int[] getConfirmedUsersID() {

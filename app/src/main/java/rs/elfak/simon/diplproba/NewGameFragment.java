@@ -64,7 +64,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
         }
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            int hh = hourOfDay-2;
+            int hh = (hourOfDay-2);
+            if (hh < 0)
+                hh += 24;
             String hhh = ""+hourOfDay;
             h = ""+hh;
             min = ""+minute;
@@ -245,7 +247,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                     try {
                     jsonarray.put(friends.get(i).getId());
                     } catch (Exception e) {} } }
+
             String datetime = y+"-"+m+"-"+d+"T"+h+":"+min+":00";
+            //String datetime = y+"-"+m+"-"+d+"T"+time.getText().toString()+":00"; //ovo radi
             JSONObject data = new JSONObject();
             try {
                 data.put("name", net);

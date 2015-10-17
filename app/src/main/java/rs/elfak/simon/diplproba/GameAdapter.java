@@ -26,12 +26,6 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHol
         TextView creatorTV;
         TextView dateTV;
         TextView addressTV;
-        TextView comTV;
-        /*EditText name;
-        EditText creator;
-        EditText date;
-        EditText address;
-        EditText com;*/
 
         GameAdapterHolder(View itemView)
         {
@@ -41,12 +35,6 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHol
             creatorTV = (TextView)itemView.findViewById(R.id.creatorTV);
             dateTV = (TextView)itemView.findViewById(R.id.dataTV);
             addressTV = (TextView)itemView.findViewById(R.id.addressTV);
-            comTV = (TextView)itemView.findViewById(R.id.comTV);
-            /*name = (EditText)itemView.findViewById(R.id.name);
-            creator = (EditText)itemView.findViewById(R.id.creator);
-            date = (EditText)itemView.findViewById(R.id.date);
-            address = (EditText)itemView.findViewById(R.id.address);
-            com = (EditText)itemView.findViewById(R.id.com);*/
         }
     }
 
@@ -59,16 +47,10 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHol
 
     @Override
     public void onBindViewHolder(GameAdapterHolder holder, int position) {
-        /*holder.name.setText(games.get(position).getName());
-        holder.creator.setText(games.get(position).getCreator());
-        holder.date.setText(games.get(position).getDate());
-        holder.address.setText(games.get(position).getAddress());
-        holder.com.setText(games.get(position).getDescription());*/
         holder.nameTV.setText(games.get(position).getName());
         holder.creatorTV.setText(games.get(position).getCreator());
-        holder.dateTV.setText(games.get(position).getDate());
+        holder.dateTV.setText(games.get(position).getDatetime());
         holder.addressTV.setText(games.get(position).getAddress());
-        holder.comTV.setText(games.get(position).getDescription());
     }
 
     @Override

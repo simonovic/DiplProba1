@@ -1,5 +1,7 @@
 package rs.elfak.simon.diplproba;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +18,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 public class MainFragment extends Fragment
 {
@@ -45,6 +51,7 @@ public class MainFragment extends Fragment
                 refreshGames();
             }
         });
+        //games = new ArrayList<Game>();
         listGames();
         return v;
     }
@@ -57,25 +64,29 @@ public class MainFragment extends Fragment
 
     public void listGames()
     {
-
-        /*String pom = ((MainActivity)getActivity()).getGameResp();
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        games = gson.fromJson(pom, new TypeToken<ArrayList<User>>(){}.getType());*/
-
-        //za probu
-        games = new ArrayList<Game>();
-        int[] a = {1,2,3};
-        int[] b = {4,5,6};
-        Game g1 = new Game(1, "ime1", "opis1", "kreator1", "datum1", "adresa1", new LatLng(23.2222, 41.2222), a, b);
-        Game g2 = new Game(2, "ime2", "opis2", "kreator2", "datum2", "adresa2", new LatLng(23.2222, 41.2222), a, b);
-        Game g3 = new Game(3, "ime3", "opis3", "kreator3", "datum3", "adresa3", new LatLng(23.2222, 41.2222), a, b);
-        games.add(g1);
-        games.add(g2);
-        games.add(g3);
-
         recView = (RecyclerView)v.findViewById(R.id.recView);
         LinearLayoutManager layMan = new LinearLayoutManager(getActivity().getApplicationContext());
         recView.setLayoutManager(layMan);
+
+        String pom = ((MainActivity)getActivity()).getGames();
+        if (pom.equals(""))
+            return;
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        games = gson.fromJson(pom, new TypeToken<ArrayList<Game>>(){}.getType());
+        Geocoder geocoder;
+        List<Address> addresses = new ArrayList<Address>();
+        geocoder = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
+        for (Iterator<Game> g = games.iterator(); g.hasNext(); ) {
+            Game gm = g.next();
+            try {
+                addresses = geocoder.getFromLocation(gm.getLat(), gm.getLng(), 1);
+            } catch (IOException e) {}
+            String address = addresses.get(0).getAddressLine(0);
+            String city = addresses.get(0).getLocality();
+            gm.setAddress(address+", "+city);
+        }
+
         GameAdapter gameAdapter = new GameAdapter(games);
         recView.setAdapter(gameAdapter);
     }

@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,8 +20,6 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.google.gson.Gson;
@@ -31,10 +28,6 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -57,24 +50,18 @@ public class MainActivity extends AppCompatActivity
     int ID;
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
-    String gameResp;
-    String gameResp1;
-    String games;
+    //String gameResp;
+    //String gameResp1;
+    String games = "";
     boolean choosenFr[];
 
-    public int getUserID() {
-        return userID;
-    }
-    public boolean[] getChoosenFr() {
-        return choosenFr;
-    }
-    public void setChoosenFr(boolean[] choosenFr) {
-        this.choosenFr = choosenFr;
-    }
+    public int getUserID() { return userID; }
+    public boolean[] getChoosenFr() { return choosenFr; }
+    public void setChoosenFr(boolean[] choosenFr) { this.choosenFr = choosenFr; }
     public String getFrResp() { return frResp; }
     public String getImgResp() { return imgResp; }
     public String getFriends() { return  friends; }
-    public String getGameResp() {return gameResp; }
+    //public String getGameResp() {return gameResp; }
     public String getGames() {return games; }
 
     @Override
@@ -101,6 +88,8 @@ public class MainActivity extends AppCompatActivity
         LoginActivity.socket.on("friendReqResponse", onFriendReqResponse);
         LoginActivity.socket.on("imgReqResponse", onImgResponse);
         LoginActivity.socket.on("newGameReqResponse", onNewGameReqResponse);
+        LoginActivity.socket.on("gameReqResponse", onGameReqResponse);
+        LoginActivity.socket.emit("findGames", userID);
         LoginActivity.socket.emit("findFriends", userID);
 
         fm = getSupportFragmentManager();
@@ -113,6 +102,33 @@ public class MainActivity extends AppCompatActivity
         //startActivity(new Intent(this, MapActivity.class)); // samo za testiranje
     }
 
+    private Emitter.Listener onGameReqResponse = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String response;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        response = data.getString("response");
+                    } catch (JSONException e) { return; }
+
+                    if (!response.equals("nogames"))
+                    {
+                        games = response;
+                        MainFragment mf = (MainFragment) fm.findFragmentById(R.id.flContent);
+                        mf.listGames();
+                    }
+                    else
+                    {
+                        games = "";
+                    }
+                }
+            });
+        }
+    };
+
     private Emitter.Listener onNewGameReqResponse = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -124,12 +140,11 @@ public class MainActivity extends AppCompatActivity
                     try {
                         response = data.getString("response");
                     } catch (JSONException e) { return; }
-                    Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                     if (response.equals("success"))
                     {
                         Fragment fragment = null;
                         try {
-                            fragment = (Fragment)MainFragment.class.newInstance();
+                            fragment = MainFragment.class.newInstance();
                         } catch (Exception e) {
                             e.printStackTrace(); }
                         fm.beginTransaction().replace(R.id.flContent, fragment).commit();
