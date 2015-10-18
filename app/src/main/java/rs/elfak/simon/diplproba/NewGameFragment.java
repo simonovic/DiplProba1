@@ -64,14 +64,16 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
         }
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            int hh = (hourOfDay-2);
+            /**int hh = (hourOfDay-2); // izgleda da ovo ne mora, videcemo
             if (hh < 0)
-                hh += 24;
-            String hhh = ""+hourOfDay;
-            h = ""+hh;
+                hh += 24;*/
+            String hhh = h = ""+hourOfDay;
+            //h = ""+hh;
             min = ""+minute;
-            if (hh<10)
-                h = "0"+hh;
+            /*if (hh<10)
+                h = "0"+hh;*/
+            if (hourOfDay<10)
+                h = "0"+hourOfDay;
             if (minute<10)
                 min = "0"+minute;
             if (hourOfDay<10)
@@ -92,10 +94,10 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            d = ""+day; m = ""+month; y = ""+year;
+            d = ""+day; m = ""+(month+1); y = ""+year;
             if (day < 10)
                 d = "0"+d;
-            if (month < 10)
+            if ((month+1) < 10)
                 m = "0"+m;
             date.setText(""+d+"."+m+"."+y+".");
         }
@@ -260,6 +262,8 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                 data.put("lng", addLatLng.longitude);
                 data.put("invFrID", jsonarray);
             } catch (JSONException e) { e.printStackTrace(); }
+            first = true;
+            trueCnt = 0;
             LoginActivity.socket.emit("newGameRequest", data);
         }
     }

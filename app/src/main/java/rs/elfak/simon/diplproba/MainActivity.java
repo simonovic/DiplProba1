@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity
     int ID;
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
-    //String gameResp;
-    //String gameResp1;
     String games = "";
     boolean choosenFr[];
 
@@ -61,7 +59,6 @@ public class MainActivity extends AppCompatActivity
     public String getFrResp() { return frResp; }
     public String getImgResp() { return imgResp; }
     public String getFriends() { return  friends; }
-    //public String getGameResp() {return gameResp; }
     public String getGames() {return games; }
 
     @Override
@@ -148,6 +145,7 @@ public class MainActivity extends AppCompatActivity
                         } catch (Exception e) {
                             e.printStackTrace(); }
                         fm.beginTransaction().replace(R.id.flContent, fragment).commit();
+                        LoginActivity.socket.emit("findGames", userID);
                         nvDrawer.getMenu().getItem(0).setChecked(true);
                     } else {
                         Toast.makeText(getApplicationContext(), "Neuspelo kreirenje igre!", Toast.LENGTH_LONG).show();

@@ -11,15 +11,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -44,11 +44,14 @@ public class MainFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, container, false);
+        recView = (RecyclerView)v.findViewById(R.id.recView);
+        LinearLayoutManager layMan = new LinearLayoutManager(getActivity().getApplicationContext());
+        recView.setLayoutManager(layMan);
         srl = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshGames();
+                LoginActivity.socket.emit("findGames", ((MainActivity) getActivity()).getUserID());
             }
         });
         //games = new ArrayList<Game>();
@@ -56,17 +59,10 @@ public class MainFragment extends Fragment
         return v;
     }
 
-    public void refreshGames()
-    {
-        Toast.makeText(getActivity().getApplicationContext(), "Radi refresh!", Toast.LENGTH_LONG).show();
-        srl.setRefreshing(false);
-    }
-
     public void listGames()
     {
-        recView = (RecyclerView)v.findViewById(R.id.recView);
-        LinearLayoutManager layMan = new LinearLayoutManager(getActivity().getApplicationContext());
-        recView.setLayoutManager(layMan);
+        if (srl.isRefreshing())
+            srl.setRefreshing(false);
 
         String pom = ((MainActivity)getActivity()).getGames();
         if (pom.equals(""))
@@ -77,16 +73,28 @@ public class MainFragment extends Fragment
         Geocoder geocoder;
         List<Address> addresses = new ArrayList<Address>();
         geocoder = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date date = null;
+        Calendar cal = Calendar.getInstance();
         for (Iterator<Game> g = games.iterator(); g.hasNext(); ) {
             Game gm = g.next();
+            String datum = gm.getDatetime().substring(0, 19);
             try {
                 addresses = geocoder.getFromLocation(gm.getLat(), gm.getLng(), 1);
+                date = format.parse(datum);
             } catch (IOException e) {}
+            catch (ParseException e) {}
             String address = addresses.get(0).getAddressLine(0);
             String city = addresses.get(0).getLocality();
             gm.setAddress(address+", "+city);
+            cal.setTime(date);
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH)+1;
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int hour = cal.get(Calendar.HOUR_OF_DAY);
+            int mins = cal.get(Calendar.MINUTE);
+            gm.setDatetime(hour+":"+mins+", "+day+"."+month+"."+year+".");
         }
-
         GameAdapter gameAdapter = new GameAdapter(games);
         recView.setAdapter(gameAdapter);
     }

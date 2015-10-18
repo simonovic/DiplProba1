@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class FriendsFragment extends Fragment
     ArrayList<User> friends;
     ListView friendsList;
     View v;
+    SwipeRefreshLayout srl;
 
     public ArrayList<User> getFriends() {
         return friends;
@@ -51,12 +53,22 @@ public class FriendsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_friends, container, false);
+        srl = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                LoginActivity.socket.emit("findFriends", ((MainActivity) getActivity()).getUserID());
+            }
+        });
         listFriends();
         return v;
     }
 
     public void listFriends()
     {
+        if (srl.isRefreshing())
+            srl.setRefreshing(false);
+
         String frList = ((MainActivity)getActivity()).getFrResp();
         if (frList.equals(""))
             return;
