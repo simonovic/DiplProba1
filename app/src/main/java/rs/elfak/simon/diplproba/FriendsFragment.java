@@ -57,7 +57,7 @@ public class FriendsFragment extends Fragment
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                LoginActivity.socket.emit("findFriends", ((MainActivity) getActivity()).getUserID());
+                //LoginActivity.socket.emit("findFriends", ((MainActivity) getActivity()).getUserID());
             }
         });
         listFriends();
