@@ -37,6 +37,7 @@
     <string name="add">Adresa</string>
     <string name="com1">Opis</string>
     <string name="numfr">Broj pozvanih prijatelja:</string>
+    <string name="requests">Zahtevi</string>
 
 
     <string name="title_activity_map">Example action</string>

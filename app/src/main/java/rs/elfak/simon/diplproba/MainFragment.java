@@ -54,7 +54,6 @@ public class MainFragment extends Fragment
                 LoginActivity.socket.emit("findGames", ((MainActivity) getActivity()).getUserID());
             }
         });
-        //games = new ArrayList<Game>();
         listGames();
         return v;
     }

@@ -20,6 +20,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
+import android.view.View;
 import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.google.gson.Gson;
@@ -38,21 +39,30 @@ public class MainActivity extends AppCompatActivity
     SearchView searchView;
     FragmentManager fm;
     ArrayList<User> users;
+    ArrayList<User> frReqSentUsers;
     MenuItem searchItem;
     int userID;
     String frResp = "";
     String frResp1 = "";
     String imgResp = "";
     String imgResp1 = "";
-    String friends;
+    String friends = "";
     boolean mode;
     boolean update = false;
+    boolean frReqSent = false;
     int ID;
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
     String games = "";
     boolean choosenFr[];
+    String frReqSentStr = "";
+    String frReqSentImg = "";
 
+    public MenuItem getSearchItem() { return searchItem; }
+    public String getFrReqSentImg() { return frReqSentImg; }
+    public String getFrReqSentStr() { return frReqSentStr; }
+    public boolean getFrReqSent() { return frReqSent; }
+    public void setFrReqSent(boolean b) { frReqSent = b; }
     public int getUserID() { return userID; }
     public boolean[] getChoosenFr() { return choosenFr; }
     public void setChoosenFr(boolean[] choosenFr) { this.choosenFr = choosenFr; }
@@ -78,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         setupDrawerContent();
 
         //testiranje
-        userID = 25;
+        userID = 43;
 
         LoginActivity.socket.on("findUsersResponse", onFindUsersResponse);
         LoginActivity.socket.on("findFriendsResponse", onFindFriendsResponse);
@@ -187,22 +197,62 @@ public class MainActivity extends AppCompatActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String response;
+                    String response, img;
                     JSONObject data = (JSONObject) args[0];
                     try {
                         response = data.getString("response");
+                        img = data.getString("img");
                     } catch (JSONException e) { return; }
-                    if (response.equals("unfriend"))
+                    if (response.equals("failed"))
+                    {
+                        if (img.equals("gpbp"))
+                            Toast.makeText(getApplicationContext(), "Neuspelo brisanja prijatelja!", Toast.LENGTH_SHORT).show();
+                        else if (img.equals("gzp"))
+                            Toast.makeText(getApplicationContext(), "Neuspelo slanje zahteva za prijateljstvom!", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (response.equals("unfriend"))
                     {
                         update = true;
                         LoginActivity.socket.emit("findFriends", userID);
                         Toast.makeText(getApplicationContext(), "Izbacen prijatelj!", Toast.LENGTH_SHORT).show();
                     }
+                    else if (response.equals("sentFrReq"))
+                    {
+                        Toast.makeText(getApplicationContext(), "Zahtev poslat!", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (response.equals("confFr"))
+                    {
+                        Toast.makeText(getApplicationContext(), "Dodat prijatelj!", Toast.LENGTH_SHORT).show();
+                        LoginActivity.socket.emit("findFriends", userID);
+                        JSONObject data1 = new JSONObject();
+                        try {
+                            data1.put("_id", userID);
+                            data1.put("mode", "reqUsers");
+                        } catch (JSONException e) { e.printStackTrace(); }
+                        LoginActivity.socket.emit("friendReqSent", data1);
+                    }
+                    else if (response.equals("nomatch"))
+                    {
+                        Toast.makeText(getApplicationContext(), "Nema zahteva za prijateljstvom!", Toast.LENGTH_SHORT).show();
+                        frReqSent = false;
+                        searchItem.setVisible(true);
+                        update = true;
+                        FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                        fr.getBtn().setText("Zahtevi");
+                        LoginActivity.socket.emit("findFriends", userID);
+                        //fr.getFriendsList().setAdapter(null);
+                    }
                     else
                     {
-                        update = true;
-                        LoginActivity.socket.emit("findFriends", userID);
-                        Toast.makeText(getApplicationContext(), "Dodat prijatelj!", Toast.LENGTH_SHORT).show();
+                        frReqSent = true;
+                        frReqSentStr = response;
+                        frReqSentImg = img;
+                        if (!frReqSentStr.equals("")) {
+                            searchItem.setVisible(false);
+                            FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                            fr.getBtn().setText("Zavrsi");
+                            fr.listFriends();
+                        }
                     }
                 }
             });
@@ -249,9 +299,7 @@ public class MainActivity extends AppCompatActivity
                         response = data.getString("response");
                         img = data.getString("img");
                         pom = data.getString("friends");
-                    } catch (JSONException e) {
-                        return;
-                    }
+                    } catch (JSONException e) { return; }
 
                     if (pom.length() > 0)
                         friends = pom.substring(1, pom.length() - 1);
@@ -343,32 +391,59 @@ public class MainActivity extends AppCompatActivity
         ID = id;
         FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
         users = fr.getFriends();
-        if (friends.contains(id+"")) {
-            msg = "Ukloniti korisnika '" + user + "' iz prijatelja?";
-            mode = true;
+        if (!frReqSent) {
+            if (friends.contains(id + "")) {
+                msg = "Ukloniti korisnika '" + user + "' iz prijatelja?";
+                mode = true;
+            } else {  // dadati proveru da li vec poslat zahtev
+                msg = "Poslati zahtev korisniku '" + user + "'?";
+                mode = false;
+            }
         }
-        else {
-            msg = "Poslati zahtev korisniku '"+user+"'?";
-            mode = false;
+        else
+        {
+            msg = "Prihvatiti '" + user + "' za prijatelja?";
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Prijateljstvo").setMessage(msg)
                 .setPositiveButton("Da", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(mode)
+                        if (!frReqSent) {
+                            if (mode) {
+                                JSONObject data = new JSONObject();
+                                try {
+                                    data.put("_id", userID);
+                                    data.put("friendID", ID);
+                                    data.put("mode", "unfriend");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                LoginActivity.socket.emit("friendReq", data);
+                            } else
+                            {
+                                JSONObject data = new JSONObject();
+                                try {
+                                    data.put("_id", userID);
+                                    data.put("userID", ID);
+                                    data.put("mode", "req");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                LoginActivity.socket.emit("friendReqSent", data);
+                            }
+                        }
+                        else
                         {
                             JSONObject data = new JSONObject();
                             try {
                                 data.put("_id", userID);
-                                data.put("friendID", ID);
-                                data.put("mode", "unfriend");
-                            } catch (JSONException e) { e.printStackTrace(); }
+                                data.put("userID", ID);
+                                data.put("mode", "confFr");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             LoginActivity.socket.emit("friendReq", data);
-                        }
-                        else //posalji zahtev za prijateljstvo
-                        {
-
                         }
                     }
                 })
@@ -392,10 +467,11 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (!newText.equals("")) {
+                    FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                    fr.getBtn().setVisibility(View.GONE);
                     JSONObject data = new JSONObject();
                     try {
                         data.put("_id", userID);
@@ -408,6 +484,7 @@ public class MainActivity extends AppCompatActivity
                     frResp = frResp1;
                     imgResp = imgResp1;
                     FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                    fr.getBtn().setVisibility(View.VISIBLE);
                     fr.listFriends();
                 }
                 return true;
