@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHolder>
@@ -46,11 +48,17 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHol
     }
 
     @Override
-    public void onBindViewHolder(GameAdapterHolder holder, int position) {
+    public void onBindViewHolder(GameAdapterHolder holder, final int position) {
         holder.nameTV.setText(games.get(position).getName());
         holder.creatorTV.setText(games.get(position).getCreator());
         holder.dateTV.setText(games.get(position).getDatetime());
         holder.addressTV.setText(games.get(position).getAddress());
+        holder.cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "Radi klik na igru: "+position, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

@@ -16,7 +16,8 @@
         game_list:cardCornerRadius="6dp"
         game_list:cardElevation="10dp"
         android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:foreground="?android:attr/selectableItemBackground"
+        game_list:contentPadding="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"

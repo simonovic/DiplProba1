@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -55,6 +57,12 @@ public class MainFragment extends Fragment
             }
         });
         listGames();
+        /*recView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity().getApplicationContext(), "Radi klik na igru!", Toast.LENGTH_LONG).show();
+            }
+        });*/
         return v;
     }
 
@@ -92,7 +100,16 @@ public class MainFragment extends Fragment
             int day = cal.get(Calendar.DAY_OF_MONTH);
             int hour = cal.get(Calendar.HOUR_OF_DAY);
             int mins = cal.get(Calendar.MINUTE);
-            gm.setDatetime(hour+":"+mins+", "+day+"."+month+"."+year+".");
+            String h = hour+"", min = mins+"", d = day+"", m = month+"";
+            if (hour<10)
+                h = "0"+h;
+            if (mins<10)
+                min = "0"+min;
+            if (day<10)
+                d = "0"+d;
+            if (month<10)
+                m = "0"+m;
+            gm.setDatetime(h+":"+min+", "+d+"."+m+"."+year+".");
         }
         GameAdapter gameAdapter = new GameAdapter(games);
         recView.setAdapter(gameAdapter);
