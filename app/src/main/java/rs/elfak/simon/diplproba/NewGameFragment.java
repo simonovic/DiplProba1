@@ -130,7 +130,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                                 trueCnt--;
                         }
                     })
-                    .setView(getActivity().getLayoutInflater().inflate(R.layout.fragment_friends, null))
+                    .setView(getActivity().getLayoutInflater().inflate(R.layout.choose_friends, null))
                     .setNegativeButton("Otkaži", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
