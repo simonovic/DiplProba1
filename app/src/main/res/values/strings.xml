@@ -38,7 +38,12 @@
     <string name="com1">Opis</string>
     <string name="numfr">Broj pozvanih prijatelja:</string>
     <string name="requests">Zahtevi</string>
+    <string name="cr">Kreirao</string>
+    <string name="map">Mapa</string>
+    <string name="start">Započni igru</string>
 
+    <string name="invFr">Pozvani prijatelji:</string>
+    <string name="confFr">Potvrdili dolazak:</string>
 
     <string name="title_activity_map">Example action</string>
     <string name="title_activity_profile">Profil</string>

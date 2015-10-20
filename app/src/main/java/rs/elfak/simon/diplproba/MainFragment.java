@@ -30,8 +30,10 @@ public class MainFragment extends Fragment
 {
     View v;
     RecyclerView recView;
-    ArrayList<Game> games;
+    static ArrayList<Game> games;
     SwipeRefreshLayout srl;
+
+    public static Game getGameAtIndex(int index) { return games.get(index); }
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();

@@ -14,10 +14,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/cv"
         game_list:cardCornerRadius="6dp"
-        game_list:cardElevation="10dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        game_list:contentPadding="10dp">
+        android:layout_margin="4dp">
 
         <LinearLayout
             android:layout_width="wrap_content"

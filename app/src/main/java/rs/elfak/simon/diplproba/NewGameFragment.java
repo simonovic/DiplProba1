@@ -140,8 +140,8 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ((MainActivity) getActivity()).setChoosenFr(bl);
-                            ((MainActivity) getActivity()).populateChFr();
+                            ((MainActivity)getActivity()).setChoosenFr(bl);
+                            ((MainActivity)getActivity()).populateChFr();
                         }
                     })
                     .create();

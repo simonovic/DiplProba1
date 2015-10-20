@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/add_user"
+                android:src="@drawable/nis2"
                 app:layout_collapseMode="parallax"/>
 
             <android.support.v7.widget.Toolbar
@@ -38,147 +38,141 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical" >
+
+           <android.support.design.widget.TextInputLayout
+               android:id="@+id/aTIL"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <EditText
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/a"
+                   android:layout_gravity="center_horizontal"
+                   android:layout_marginTop="20dp"
+                   android:hint="@string/name1"
+                   android:background="@drawable/myedittext"
+                   android:padding="7dp"
+                   android:focusableInTouchMode="false"/>
+           </android.support.design.widget.TextInputLayout>
+
+           <android.support.design.widget.TextInputLayout
+               android:id="@+id/bTIL"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <EditText
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/b"
+                   android:layout_gravity="center_horizontal"
+                   android:layout_marginTop="20dp"
+                   android:hint="@string/cr"
+                   android:background="@drawable/myedittext"
+                   android:padding="7dp"
+                   android:focusableInTouchMode="false"/>
+           </android.support.design.widget.TextInputLayout>
+
+           <android.support.design.widget.TextInputLayout
+               android:id="@+id/cTIL"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <EditText
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/c"
+                   android:layout_gravity="center_horizontal"
+                   android:layout_marginTop="20dp"
+                   android:hint="@string/time"
+                   android:background="@drawable/myedittext"
+                   android:padding="7dp"
+                   android:focusableInTouchMode="false"/>
+           </android.support.design.widget.TextInputLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="24dp">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="20">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp">
+               <android.support.design.widget.TextInputLayout
+                   android:id="@+id/dTIL"
+                   android:layout_weight="15"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content">
+                   <EditText
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/d"
+                       android:layout_gravity="center_horizontal"
+                       android:layout_marginTop="20dp"
+                       android:hint="@string/add"
+                       android:background="@drawable/myedittext"
+                       android:padding="7dp"
+                       android:focusableInTouchMode="false"/>
+               </android.support.design.widget.TextInputLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Lorem ipsum"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ovo je enaociaeciaenipaenvaenipo nqeiofaioen faeoin fafoen faeion oainf ae"/>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Sed quam eros"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ovo je enaociaeciaenipaenvaenipo nqeiofaioen faeoin fafoen faeion oainf ae"/>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Sed a euismod dui"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ovo je enaociaeciaenipaenvaenipo nqeiofaioen faeoin fafoen faeion oainf ae"/>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Fusce nec lacinia mi"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ovo je enaociaeciaenipaenvaenipo nqeiofaioen faeoin fafoen faeion oainf ae"/>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Praesent hendrerit"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ovo je enaociaeciaenipaenvaenipo nqeiofaioen faeoin fafoen faeion oainf ae"/>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
+              <Button
+                    android:layout_width="0dp"
+                    android:layout_height="37dp"
+                    android:text="@string/map"
+                    android:id="@+id/mapBtn"
+                    android:layout_marginTop="10dp"
+                    android:stateListAnimator="@drawable/my_animator"
+                    android:background="@drawable/mybutton"
+                    android:layout_marginLeft="4dp"
+                    android:layout_weight="5.60"
+                    android:layout_marginRight="10dp" />
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+           <android.support.design.widget.TextInputLayout
+               android:id="@+id/eTIL"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <EditText
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/e"
+                   android:layout_gravity="center_horizontal"
+                   android:layout_marginTop="20dp"
+                   android:hint="@string/com1"
+                   android:background="@drawable/myedittext"
+                   android:padding="7dp"
+                   android:focusableInTouchMode="false"/>
+           </android.support.design.widget.TextInputLayout>
 
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:orientation="horizontal">
+               <Button
+                   android:layout_weight="1"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:text="@string/invFr"
+                   android:id="@+id/invBtn"
+                   android:onClick="onInvBtn"/>
+               <Button
+                   android:layout_weight="1"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:text="@string/confFr"
+                   android:id="@+id/confBtn"
+                   android:onClick="onConfBtn"/>
+           </LinearLayout>
+
+           <Button
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="@string/start"
+               android:id="@+id/startGameBtn"
+               android:layout_marginTop="20dp"
+               android:stateListAnimator="@drawable/my_animator"
+               android:background="@drawable/mybutton"
+               android:layout_marginBottom="20dp" />
+       </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

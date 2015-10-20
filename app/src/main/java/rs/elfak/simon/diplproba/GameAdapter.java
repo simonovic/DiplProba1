@@ -57,7 +57,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHol
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.getContext().startActivity(new Intent(v.getContext(), GameActivity.class));
+                v.getContext().startActivity((new Intent(v.getContext(), GameActivity.class)).putExtra("pos", position));
             }
         });
     }
