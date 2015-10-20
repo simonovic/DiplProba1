@@ -1,5 +1,6 @@
 package rs.elfak.simon.diplproba;
 
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -56,7 +57,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHol
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Radi klik na igru: "+position, Toast.LENGTH_LONG).show();
+                v.getContext().startActivity(new Intent(v.getContext(), GameActivity.class));
             }
         });
     }

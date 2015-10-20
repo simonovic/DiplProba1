@@ -87,8 +87,14 @@ public class MainActivity extends AppCompatActivity
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent();
 
+        fm = getSupportFragmentManager();
+        shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
+        editor = shPref.edit();
+        //userID = shPref.getInt(Constants.userIDpref, 0);
         //testiranje
         userID = 43;
+        fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance())/*.addToBackStack(null)*/.commit();
+        nvDrawer.getMenu().getItem(0).setChecked(true);
 
         LoginActivity.socket.on("findUsersResponse", onFindUsersResponse);
         LoginActivity.socket.on("findFriendsResponse", onFindFriendsResponse);
@@ -99,13 +105,7 @@ public class MainActivity extends AppCompatActivity
         LoginActivity.socket.emit("findGames", userID);
         LoginActivity.socket.emit("findFriends", userID);
 
-        fm = getSupportFragmentManager();
-        shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
-        editor = shPref.edit();
-        fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance()).commit();
-        nvDrawer.getMenu().getItem(0).setChecked(true);
 
-        //userID = shPref.getInt(Constants.userIDpref, 0);
         //startActivity(new Intent(this, MapActivity.class)); // samo za testiranje
     }
 
@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity
             fragment = (Fragment)fragClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace(); }
-        fm.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fm.beginTransaction().replace(R.id.flContent, fragment).addToBackStack(null).commit();
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();

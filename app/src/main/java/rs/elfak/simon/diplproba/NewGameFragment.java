@@ -176,7 +176,6 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
         address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), "Radi klik na adresu!", Toast.LENGTH_SHORT).show();
                 startActivityForResult(new Intent(getActivity(), MapActivity.class), 100);
             }
         });

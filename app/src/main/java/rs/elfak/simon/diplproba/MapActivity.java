@@ -39,7 +39,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        Toast.makeText(getApplicationContext(), ""+latLng, Toast.LENGTH_LONG).show();
         Intent retInt = new Intent();
         retInt.putExtra("latlng", latLng);
         setResult(Activity.RESULT_OK, retInt);

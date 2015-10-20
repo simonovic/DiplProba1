@@ -50,9 +50,9 @@ public class LoginActivity extends Activity
         userName = shPref.getString(Constants.userNamepref,"false");
         if ((userID != 0) && (!userName.equals("false")))
         {
-           // Intent i = new Intent(this, MainActivity.class);
-            //i.putExtra("userID", userID);
-            //startActivity(i);
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("userID", userID);
+            startActivity(i);
         }
 
         // testiranje slanja slika
@@ -92,13 +92,13 @@ public class LoginActivity extends Activity
     @Override
     protected void onStart() {
         super.onStart();
-        //editor.putInt(Constants.userIDpref, userID);
+        //editor.putInt(Constants.userIDpref, userID); //ovo je verovatno kad se odjavis
         //editor.commit();
         if ((userID != 0) && (!userName.equals("false")))
         {
-            //Intent i = new Intent(this, MainActivity.class);
-            //i.putExtra("userID", userID);
-            //startActivity(i);
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("userID", userID);
+            startActivity(i);
         }
     }
 
@@ -117,7 +117,6 @@ public class LoginActivity extends Activity
         String p = pass.getText().toString().trim();
         if (n.equals("") || p.equals(""))
         {
-            //Toast.makeText(getApplicationContext(), "Morate uneti korisničko ime i lozinku!", Toast.LENGTH_LONG).show();
             if (n.equals(""))
                 name.setError("Morate uneti korisničko ime!");
             if (n.equals(""))
@@ -130,7 +129,6 @@ public class LoginActivity extends Activity
                 data.put("user", n);
                 data.put("pass", p);
             } catch (JSONException e) { e.printStackTrace(); }
-
             socket.emit("loginRequest", data);
         }
     }

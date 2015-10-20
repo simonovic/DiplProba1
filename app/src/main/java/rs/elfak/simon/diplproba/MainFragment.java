@@ -57,12 +57,6 @@ public class MainFragment extends Fragment
             }
         });
         listGames();
-        /*recView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), "Radi klik na igru!", Toast.LENGTH_LONG).show();
-            }
-        });*/
         return v;
     }
 
