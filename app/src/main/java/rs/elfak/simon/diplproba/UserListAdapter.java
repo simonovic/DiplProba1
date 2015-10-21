@@ -43,7 +43,7 @@ public class UserListAdapter extends ArrayAdapter<String>
         tvm.setText(uname[position]);
         imv.setImageBitmap(img.get(position));
         if (fon[position].equals("no"))
-            imaf.setImageResource(R.drawable.add_user);
+            imaf.setImageResource(R.drawable.ic_person_add);
         return rowView;
     }
 }

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,9 +22,6 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -41,24 +35,13 @@ public class MainActivity extends AppCompatActivity
     SearchView searchView;
     FragmentManager fm;
     ArrayList<User> users;
-    ArrayList<User> frReqSentUsers;
     MenuItem searchItem;
-    int userID;
-    String frResp = "";
-    String frResp1 = "";
-    String imgResp = "";
-    String imgResp1 = "";
-    String friends = "";
-    boolean mode;
-    boolean update = false;
-    boolean frReqSent = false;
-    int ID;
+    int userID, ID;
+    String frResp = "", frResp1 = "", imgResp = "", imgResp1 = "", friends = "", games = "", frReqSentStr = "", frReqSentImg = "";
+    boolean mode, update = true, frReqSent = false;
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
-    String games = "";
-    boolean choosenFr[];
-    String frReqSentStr = "";
-    String frReqSentImg = "";
+    boolean chosenFr[];
 
     public MenuItem getSearchItem() { return searchItem; }
     public String getFrReqSentImg() { return frReqSentImg; }
@@ -66,8 +49,8 @@ public class MainActivity extends AppCompatActivity
     public boolean getFrReqSent() { return frReqSent; }
     public void setFrReqSent(boolean b) { frReqSent = b; }
     public int getUserID() { return userID; }
-    public boolean[] getChoosenFr() { return choosenFr; }
-    public void setChoosenFr(boolean[] choosenFr) { this.choosenFr = choosenFr; }
+    public boolean[] getChosenFr() { return chosenFr; }
+    public void setChosenFr(boolean[] chosenFr) { this.chosenFr = chosenFr; }
     public String getFrResp() { return frResp; }
     public String getImgResp() { return imgResp; }
     public String getFriends() { return  friends; }
@@ -94,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         editor = shPref.edit();
         //userID = shPref.getInt(Constants.userIDpref, 0);
         //testiranje
-        userID = 43;
+        userID = 42;
         fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance())/*.addToBackStack(null)*/.commit();
         nvDrawer.getMenu().getItem(0).setChecked(true);
 
@@ -105,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         LoginActivity.socket.on("newGameReqResponse", onNewGameReqResponse);
         LoginActivity.socket.on("gameReqResponse", onGameReqResponse);
         LoginActivity.socket.emit("findGames", userID);
-        LoginActivity.socket.emit("findFriends", userID);
+        //LoginActivity.socket.emit("findFriends", userID);
 
 
         //startActivity(new Intent(this, MapActivity.class)); // samo za testiranje
@@ -132,6 +115,8 @@ public class MainActivity extends AppCompatActivity
                     else
                     {
                         games = "";
+                        MainFragment mf = (MainFragment) fm.findFragmentById(R.id.flContent);
+                        mf.getRecView().setAdapter(null);
                     }
                 }
             });
@@ -210,13 +195,33 @@ public class MainActivity extends AppCompatActivity
                         if (img.equals("gpbp"))
                             Toast.makeText(getApplicationContext(), "Neuspelo brisanja prijatelja!", Toast.LENGTH_SHORT).show();
                         else if (img.equals("gzp"))
-                            Toast.makeText(getApplicationContext(), "Neuspelo slanje zahteva za prijateljstvom!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Neuspelo slanje zahteva za prijateljstvo!", Toast.LENGTH_SHORT).show();
+                        else if (img.equals("gpz"))
+                            Toast.makeText(getApplicationContext(), "Neuspelo pribavaljanje zahteva!!", Toast.LENGTH_SHORT).show();
+                        else if (img.equals("gbz"))
+                            Toast.makeText(getApplicationContext(), "Neuspelo brisanje zahteva!!", Toast.LENGTH_SHORT).show();
+                    } else if (response.equals("denied"))
+                    {
+                        if (img.equals("AS"))
+                            Toast.makeText(getApplicationContext(), "Zahtev je vec poslat!", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getApplicationContext(), "Zahtev je vec primljen!", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (response.equals("delReq"))
+                    {
+                        Toast.makeText(getApplicationContext(), "Zahtev izbrisan!", Toast.LENGTH_SHORT).show();
+                        JSONObject data1 = new JSONObject();
+                        try {
+                            data1.put("_id", userID);
+                            data1.put("mode", "reqUsers");
+                        } catch (JSONException e) { e.printStackTrace(); }
+                        LoginActivity.socket.emit("friendReqSent", data1);
                     }
                     else if (response.equals("unfriend"))
                     {
                         update = true;
                         LoginActivity.socket.emit("findFriends", userID);
-                        Toast.makeText(getApplicationContext(), "Izbacen prijatelj!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Izbrisan prijatelj!", Toast.LENGTH_SHORT).show();
                     }
                     else if (response.equals("sentFrReq"))
                     {
@@ -318,11 +323,11 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(getApplicationContext(), "Nema prijatelja!", Toast.LENGTH_SHORT).show();
                         frResp = frResp1 = "";
                         imgResp = imgResp1 = "";
-                        if (update) {
+                        //if (update) {
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
                             fr.getFriendsList().setAdapter(null);
-                            update = false;
-                        }
+                            if (update) update = false;
+                        //}
                     }
                 }
             });
@@ -364,10 +369,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_first_fragment:
                 fragClass = MainFragment.class;
                 searchItem.setVisible(false);
+                LoginActivity.socket.emit("findGames", userID);
                 break;
             case R.id.nav_second_fragment:
                 fragClass = FriendsFragment.class;
                 searchItem.setVisible(true);
+                LoginActivity.socket.emit("findFriends", userID);
                 break;
             case R.id.nav_third_fragment:
                 fragClass = NewGameFragment.class;
@@ -394,7 +401,7 @@ public class MainActivity extends AppCompatActivity
         FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
         users = fr.getFriends();
         if (!frReqSent) {
-            if (friends.contains(id + "")) {
+            if (friends.contains(ID+"")) {
                 msg = "Ukloniti korisnika '" + user + "' iz prijatelja?";
                 mode = true;
             } else {  // dadati proveru da li vec poslat zahtev
@@ -452,9 +459,26 @@ public class MainActivity extends AppCompatActivity
                 .setNegativeButton("Ne", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "No dugme!"+ID, Toast.LENGTH_LONG).show();
+
                     }
-                }).show();
+                });
+                if (frReqSent)
+                    builder.setNeutralButton("Izbriši zahtev", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            JSONObject data = new JSONObject();
+                            try {
+                                data.put("_id", userID);
+                                data.put("userID", ID);
+                                data.put("mode", "delReq");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            LoginActivity.socket.emit("friendReqSent", data);
+                        }
+                    });
+
+                builder.show();
     }
 
     @Override

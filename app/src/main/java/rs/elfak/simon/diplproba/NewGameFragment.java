@@ -117,7 +117,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                 pom.add(fr.getUname()+" ("+fr.getFname()+" "+fr.getLname()+")");
             }
             final CharSequence frlist[] = pom.toArray(new CharSequence[pom.size()]);
-            final boolean bl[] = first ? new boolean[frlist.length] : ((MainActivity)getActivity()).getChoosenFr();
+            final boolean bl[] = first ? new boolean[frlist.length] : ((MainActivity)getActivity()).getChosenFr();
             if (first) first = false;
             return new AlertDialog.Builder(getActivity())
                     .setTitle("Prijatelji:")
@@ -140,7 +140,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ((MainActivity)getActivity()).setChoosenFr(bl);
+                            ((MainActivity)getActivity()).setChosenFr(bl);
                             ((MainActivity)getActivity()).populateChFr();
                         }
                     })
@@ -269,7 +269,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
 
     public void populateChoosenFr()
     {
-        chFrBool = ((MainActivity)getActivity()).getChoosenFr();
+        chFrBool = ((MainActivity)getActivity()).getChosenFr();
         //int trueCount = Arrays.deepToString((Object[])chFrBool).replaceAll("[^t]", "").length();
         numChoosenFr.setText("Broj pozvanih prijatelja: "+trueCnt);
         Toast.makeText(getActivity().getApplicationContext(), "Radi: "+chFrBool[0], Toast.LENGTH_SHORT).show();

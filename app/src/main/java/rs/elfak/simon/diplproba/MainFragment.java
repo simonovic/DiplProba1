@@ -32,6 +32,9 @@ public class MainFragment extends Fragment
     RecyclerView recView;
     static ArrayList<Game> games;
     SwipeRefreshLayout srl;
+    GameAdapter gameAdapter;
+
+    public RecyclerView getRecView() { return recView; }
 
     public static Game getGameAtIndex(int index) { return games.get(index); }
 
@@ -107,7 +110,7 @@ public class MainFragment extends Fragment
                 m = "0"+m;
             gm.setDatetime(h+":"+min+", "+d+"."+m+"."+year+".");
         }
-        GameAdapter gameAdapter = new GameAdapter(games);
+        gameAdapter = new GameAdapter(games);
         recView.setAdapter(gameAdapter);
     }
 }

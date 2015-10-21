@@ -42,11 +42,12 @@
     <string name="map">Mapa</string>
     <string name="start">Započni igru</string>
 
-    <string name="invFr">Pozvani prijatelji:</string>
-    <string name="confFr">Potvrdili dolazak:</string>
+    <string name="invFr">Pozvani prijatelji</string>
+    <string name="confFr">Potvrdili dolazak</string>
+    <string name="delete">Izbaci igru</string>
 
     <string name="title_activity_map">Example action</string>
     <string name="title_activity_profile">Profil</string>
-    <string name="title_activity_game">GameActivity</string>
+    <string name="title_activity_game">ImeIgre</string>
 
 </resources>
