@@ -196,7 +196,6 @@ public class GameActivity extends AppCompatActivity
 
             }
         });
-
         dialog.show();
     }
 
