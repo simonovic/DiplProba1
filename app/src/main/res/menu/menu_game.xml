@@ -3,15 +3,15 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/delete"
-        android:icon="@drawable/ic_delete"
-        app:showAsAction="always"
-        android:title="@string/delete"/>
-
-    <item
         android:id="@+id/confirmGame"
         android:icon="@drawable/ic_verified_user"
         app:showAsAction="always"
         android:title="@string/confGame"/>
+
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_delete"
+        app:showAsAction="always"
+        android:title="@string/delete"/>
 
 </menu>
