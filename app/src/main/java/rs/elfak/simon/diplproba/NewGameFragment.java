@@ -52,6 +52,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
     static boolean first = true;
     int userID;
     LatLng addLatLng;
+    static String frList;
 
     public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
         @Override
@@ -107,7 +108,6 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
         ArrayList<User> friends;
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            String frList = ((MainActivity)getActivity()).getFrResp();
             Gson gson = new GsonBuilder().serializeNulls().create();
             friends = gson.fromJson(frList, new TypeToken<ArrayList<User>>() {}.getType());
             List<String> pom = new ArrayList<String>();
@@ -221,7 +221,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             case R.id.chUser:
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 SomeDialog newFragment = new SomeDialog ();
-                newFragment.show(ft, "dialog");
+                frList = ((MainActivity)getActivity()).getFrResp();
+                if (!frList.equals(""))
+                    newFragment.show(ft, "dialog");
                 break;
             case R.id.createGame:
                 createGame();

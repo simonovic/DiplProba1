@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
     MenuItem searchItem;
     int userID, ID;
     String frResp = "", frResp1 = "", imgResp = "", imgResp1 = "", friends = "", games = "", frReqSentStr = "", frReqSentImg = "";
-    boolean mode, update = true, frReqSent = false;
+    boolean mode, update = false, frReqSent = false;
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
     boolean chosenFr[];
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         LoginActivity.socket.on("newGameReqResponse", onNewGameReqResponse);
         LoginActivity.socket.on("gameReqResponse", onGameReqResponse);
         LoginActivity.socket.emit("findGames", userID);
-        //LoginActivity.socket.emit("findFriends", userID);
+        LoginActivity.socket.emit("findFriends", userID);
 
 
         //startActivity(new Intent(this, MapActivity.class)); // samo za testiranje
