@@ -45,6 +45,7 @@
     <string name="invFr">Pozvani prijatelji</string>
     <string name="confFr">Potvrdili dolazak</string>
     <string name="delete">Izbaci igru</string>
+    <string name="confGame">Potvrdi dolazak</string>
 
     <string name="title_activity_map">Example action</string>
     <string name="title_activity_profile">Profil</string>

@@ -44,7 +44,7 @@ public class GameActivity extends AppCompatActivity
     List<String> invFrL, confFrL;
     int userID;
     SharedPreferences shPref;
-    //ArrayAdapter<String> invFrAdap, confFrAdap;
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity
         setContentView(R.layout.activity_game);
 
         LoginActivity.socket.on("getInvConfFrResponse", onGetInvConfFrResponse);
-        LoginActivity.socket.on("getGameReqResponse", onGetGameReqResponse);
+        LoginActivity.socket.on("delConfGameReqResponse", onDelConfGameReqResponse);
 
         game = MainFragment.getGameAtIndex(getIntent().getExtras().getInt("pos"));
         setUI();
@@ -85,7 +85,7 @@ public class GameActivity extends AppCompatActivity
         userID = 42;
     }
 
-    private Emitter.Listener onGetGameReqResponse = new Emitter.Listener() {
+    private Emitter.Listener onDelConfGameReqResponse = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             runOnUiThread(new Runnable() {
@@ -102,8 +102,15 @@ public class GameActivity extends AppCompatActivity
                         LoginActivity.socket.emit("findGames", userID);
                         finish();
                     }
-                    else { //"failed"
-                        Toast.makeText(getApplicationContext(), "Neuspelo brisanje igre", Toast.LENGTH_LONG).show();
+                    else if (response.equals("confGame")) {
+                        Toast.makeText(getApplicationContext(), "Dolazak potvrdjen!", Toast.LENGTH_LONG).show();
+                        menu.findItem(R.id.confirmGame).setVisible(false);
+                    }
+                    else { // "failed"
+                        if (img.equals("gbi"))
+                            Toast.makeText(getApplicationContext(), "Neuspelo brisanje igre!", Toast.LENGTH_LONG).show();
+                        else if (img.equals("gpi"))
+                            Toast.makeText(getApplicationContext(), "Neuspela potvrda dolaska!", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -129,7 +136,6 @@ public class GameActivity extends AppCompatActivity
                         invFrAList = gson.fromJson(invFr, new TypeToken<ArrayList<User>>(){}.getType());
                         for (int i = 0; i < invFrAList.size(); i++)
                             invFrL.add((i+1)+". "+invFrAList.get(i).getUname());
-                        //invFrL.add(u.)
                         if (!confFr.equals("")) {
                             confFrAList = gson.fromJson(confFr, new TypeToken<ArrayList<User>>() {}.getType());
                             for (int i = 0; i < confFrAList.size(); i++)
@@ -195,8 +201,16 @@ public class GameActivity extends AppCompatActivity
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_game, menu);
         if (userID != Integer.parseInt(game.getCreatorID()))
-            getMenuInflater().inflate(R.menu.menu_game, menu);
+            menu.findItem(R.id.delete).setVisible(false);
+        int[] pom = game.getConfirmedUsersID();
+        for (int i = 0; i < pom.length; i++)
+            if (userID == pom[i]) {
+                menu.findItem(R.id.confirmGame).setVisible(false);
+                break;
+            }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -221,8 +235,34 @@ public class GameActivity extends AppCompatActivity
                             try {
                                 data.put("_id", userID);
                                 data.put("gameID", game.get_id());
+                                data.put("mode", "del");
                             } catch (JSONException e) { e.printStackTrace(); }
-                            LoginActivity.socket.emit("delGame", data);
+                            LoginActivity.socket.emit("delConfGame", data);
+                        }
+                    })
+                    .show();
+        }
+        else
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(game.getName())
+                    .setMessage("Potvrditi dolazak?")
+                    .setNegativeButton("Ne", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            JSONObject data = new JSONObject();
+                            try {
+                                data.put("_id", userID);
+                                data.put("gameID", game.get_id());
+                                data.put("mode", "conf");
+                            } catch (JSONException e) { e.printStackTrace(); }
+                            LoginActivity.socket.emit("delConfGame", data);
                         }
                     })
                     .show();

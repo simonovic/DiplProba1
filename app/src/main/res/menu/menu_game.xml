@@ -8,4 +8,10 @@
         app:showAsAction="always"
         android:title="@string/delete"/>
 
+    <item
+        android:id="@+id/confirmGame"
+        android:icon="@drawable/ic_verified_user"
+        app:showAsAction="always"
+        android:title="@string/confGame"/>
+
 </menu>
