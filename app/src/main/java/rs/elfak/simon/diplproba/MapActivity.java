@@ -16,25 +16,50 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener
 {
     GoogleMap gmap;
+    String mode;
+    LatLng ll;
+    Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        extras = getIntent().getExtras();
+        mode = extras.getString("mode");
+
         SupportMapFragment smapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         smapFrag.getMapAsync(this);
+    }
+
+    private void setUpNav()
+    {
+        double[] pom = extras.getDoubleArray("location");
+        ll = new LatLng(pom[0], pom[1]);
+        gmap.addMarker(new MarkerOptions().position(ll));
+        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+    }
+
+    public void setUpNewGame()
+    {
+        ll = new LatLng(43.317758, 21.900435);
+        gmap.addMarker(new MarkerOptions().position(ll));
+        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+        gmap.setOnMapLongClickListener(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gmap = googleMap;
-        LatLng position = new LatLng(43.3192769, 21.899564);
+
+        if (mode.equals("nav")) {
+            setUpNav();
+        }
+
+        if (mode.equals("newGame"))
+            setUpNewGame();
+
         gmap.setMyLocationEnabled(true);
-        gmap.addMarker(new MarkerOptions().position(position));
-        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-        //gmap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        gmap.setOnMapLongClickListener(this);
     }
 
     @Override

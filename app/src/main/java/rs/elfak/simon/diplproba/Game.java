@@ -2,6 +2,8 @@ package rs.elfak.simon.diplproba;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Date;
+
 public class Game
 {
     int _id;
@@ -31,14 +33,11 @@ public class Game
         this.lng = lng;
         this.confirmedUsersID = confirmedUsersID;
         this.invitedUsersID = invitedUsersID;
+
     }
 
     public int get_id() {
         return _id;
-    }
-
-    public void set_id(int _id) {
-        this._id = _id;
     }
 
     public String getName() {
@@ -53,16 +52,8 @@ public class Game
         return desc;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
     public String getCreatorID() {
         return creatorID;
-    }
-
-    public void setCreatorID(String creatorID) {
-        this.creatorID = creatorID;
     }
 
     public String getCreator() {
@@ -93,31 +84,15 @@ public class Game
         return lat;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
     public double getLng() {
         return lng;
-    }
-
-    public void setLng(double lng) {
-        this.lng = lng;
     }
 
     public int[] getConfirmedUsersID() {
         return confirmedUsersID;
     }
 
-    public void setConfirmedUsersID(int[] confirmedUsersID) {
-        this.confirmedUsersID = confirmedUsersID;
-    }
-
     public int[] getInvitedUsersID() {
         return invitedUsersID;
-    }
-
-    public void setInvitedUsersID(int[] invitedUsersID) {
-        this.invitedUsersID = invitedUsersID;
     }
 }

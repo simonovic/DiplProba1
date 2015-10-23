@@ -3,6 +3,7 @@ package rs.elfak.simon.diplproba;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -31,8 +32,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -148,6 +154,35 @@ public class GameActivity extends AppCompatActivity
             });
         }
     };
+
+    public void onStartGameBtn(View v)
+    {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date gameDate = null;
+        Date curDate = new Date();
+        String datum = game.getDatetime().substring(0, 19);
+        try {
+            gameDate = format.parse(datum);
+        }
+        catch (ParseException e) {}
+        Calendar calgm = Calendar.getInstance();
+        Calendar calcurr = Calendar.getInstance();
+        calgm.setTime(gameDate);
+        calcurr.setTime(curDate);
+        if (calgm.before(calcurr))
+        {
+            Toast.makeText(this, "Jos nije pocela igra!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onMapBtn(View v)
+    {
+        Intent i = new Intent(this, MapActivity.class);
+        double[] pom = {game.getLat(), game.getLng()};
+        i.putExtra("location", pom);
+        i.putExtra("mode", "nav");
+        startActivity(i);
+    }
 
     private void getInvConfFr()
     {

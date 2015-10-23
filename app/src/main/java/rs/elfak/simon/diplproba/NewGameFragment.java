@@ -33,8 +33,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -176,7 +179,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
         address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), MapActivity.class), 100);
+                Intent i = new Intent(getActivity(), MapActivity.class);
+                i.putExtra("mode", "newGame");
+                startActivityForResult(i, 100);
             }
         });
         String frList = ((MainActivity)getActivity()).getFrResp();
@@ -250,9 +255,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                     try {
                     jsonarray.put(friends.get(i).getId());
                     } catch (Exception e) {} } }
-
             String datetime = y+"-"+m+"-"+d+"T"+h+":"+min+":00";
-            //String datetime = y+"-"+m+"-"+d+"T"+time.getText().toString()+":00"; //ovo radi
             JSONObject data = new JSONObject();
             try {
                 data.put("name", net);

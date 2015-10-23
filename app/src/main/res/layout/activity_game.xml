@@ -123,6 +123,7 @@
                     android:stateListAnimator="@drawable/my_animator"
                     android:background="@drawable/mybutton"
                     android:layout_marginLeft="4dp"
+                    android:onClick="onMapBtn"
                     android:layout_weight="5.60"
                     android:layout_marginRight="10dp" />
 
@@ -169,6 +170,7 @@
                android:layout_height="wrap_content"
                android:text="@string/start"
                android:id="@+id/startGameBtn"
+               android:onClick="onStartGameBtn"
                android:layout_marginTop="20dp"
                android:stateListAnimator="@drawable/my_animator"
                android:background="@drawable/mybutton"
