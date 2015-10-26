@@ -5,74 +5,66 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.GetChars;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
-import android.widget.SimpleExpandableListAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.github.nkzawa.emitter.Emitter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-public class GameActivity extends AppCompatActivity
+public class GameActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+                                                                GoogleApiClient.OnConnectionFailedListener
 {
     Game game;
     EditText a,b,c,d,e;
     ArrayList<User> invFrAList, confFrAList;
     List<String> invFrL, confFrL;
-    int userID;
+    int userID, numConf;
     SharedPreferences shPref;
     Menu menu;
+    GoogleApiClient gApiCl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        LoginActivity.socket.on("getInvConfFrResponse", onGetInvConfFrResponse);
-        LoginActivity.socket.on("delConfGameReqResponse", onDelConfGameReqResponse);
-
-        game = MainFragment.getGameAtIndex(getIntent().getExtras().getInt("pos"));
         setUI();
+        setUpApiClient();
         getInvConfFr();
     }
 
     private void setUI()
     {
+        LoginActivity.socket.on("getInvConfFrResponse", onGetInvConfFrResponse);
+        LoginActivity.socket.on("delConfGameReqResponse", onDelConfGameReqResponse);
+        game = MainFragment.getGameAtIndex(getIntent().getExtras().getInt("pos"));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(""/*game.getName()*/);
-
         a = (EditText)findViewById(R.id.a);
         b = (EditText)findViewById(R.id.b);
         c = (EditText)findViewById(R.id.c);
@@ -80,7 +72,7 @@ public class GameActivity extends AppCompatActivity
         e = (EditText)findViewById(R.id.e);
         a.setText(game.getName());
         b.setText(game.getCreator());
-        c.setText(game.getDatetime());
+        c.setText(game.getDt());
         d.setText(game.getAddress());
         e.setText(game.getDesc());
         invFrL = new ArrayList<String>();
@@ -89,6 +81,42 @@ public class GameActivity extends AppCompatActivity
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         //userID = shPref.getInt(Constants.userIDpref, 0);
         userID = 42;
+    }
+
+    private void setUpApiClient()
+    {
+        gApiCl = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        gApiCl.connect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //gApiCl.disconnect();
     }
 
     private Emitter.Listener onDelConfGameReqResponse = new Emitter.Listener() {
@@ -110,6 +138,7 @@ public class GameActivity extends AppCompatActivity
                     }
                     else if (response.equals("confGame")) {
                         Toast.makeText(getApplicationContext(), "Dolazak potvrdjen!", Toast.LENGTH_LONG).show();
+                        confFrL.add((numConf +1)+". "+game.getCreator());
                         menu.findItem(R.id.confirmGame).setVisible(false);
                     }
                     else { // "failed"
@@ -144,7 +173,8 @@ public class GameActivity extends AppCompatActivity
                             invFrL.add((i+1)+". "+invFrAList.get(i).getUname());
                         if (!confFr.equals("")) {
                             confFrAList = gson.fromJson(confFr, new TypeToken<ArrayList<User>>() {}.getType());
-                            for (int i = 0; i < confFrAList.size(); i++)
+                            numConf = confFrAList.size();
+                            for (int i = 0; i < numConf; i++)
                                 confFrL.add((i+1)+". "+confFrAList.get(i).getUname());
                         }
                         else
@@ -155,24 +185,46 @@ public class GameActivity extends AppCompatActivity
         }
     };
 
-    public void onStartGameBtn(View v)
-    {
+    public void onStartGameBtn(View v) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date gameDate = null;
         Date curDate = new Date();
         String datum = game.getDatetime().substring(0, 19);
         try {
             gameDate = format.parse(datum);
-        }
-        catch (ParseException e) {}
-        Calendar calgm = Calendar.getInstance();
-        Calendar calcurr = Calendar.getInstance();
-        calgm.setTime(gameDate);
-        calcurr.setTime(curDate);
-        if (calgm.before(calcurr))
+        } catch (ParseException e) { e.printStackTrace(); }
+        long curTime = curDate.getTime();
+        long gameTime = gameDate.getTime();
+        if (curTime - gameTime > 0 )
         {
-            Toast.makeText(this, "Jos nije pocela igra!", Toast.LENGTH_LONG).show();
+            if ((curTime - gameTime)/1000 > 60000) {
+                Toast.makeText(this, "Isteklo je vreme za igru!", Toast.LENGTH_LONG).show();
+                LoginActivity.socket.emit("findGames", userID);
+                finish();
+            }
+            else
+            {
+                if (gApiCl.isConnected()) {
+                    Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                    if (myLoc != null) {
+                        Location gameLoc = new Location("gameLocation");
+                        gameLoc.setLatitude(game.getLat());
+                        gameLoc.setLongitude(game.getLng());
+                        float metres = myLoc.distanceTo(gameLoc);
+                        if (myLoc.distanceTo(gameLoc) < 30)
+                        {
+                            Toast.makeText(this, "Igra moze da pocne!", Toast.LENGTH_LONG).show();
+                        }
+                        else
+                            Toast.makeText(this, "Niste na lokaciji igre!", Toast.LENGTH_LONG).show();
+                    }
+                }
+                else
+                    Toast.makeText(this, "Neuspelo povezivanje sa Google Servisima!", Toast.LENGTH_LONG).show();
+            }
         }
+        else
+            Toast.makeText(this, "Jos nije pocela igra!", Toast.LENGTH_LONG).show();
     }
 
     public void onMapBtn(View v)
@@ -237,7 +289,7 @@ public class GameActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_game, menu);
-        if (userID != Integer.parseInt(game.getCreatorID()))
+        if (userID == Integer.parseInt(game.getCreatorID()))
             menu.findItem(R.id.delete).setVisible(false);
         int[] pom = game.getConfirmedUsersID();
         for (int i = 0; i < pom.length; i++)
@@ -276,7 +328,7 @@ public class GameActivity extends AppCompatActivity
                     })
                     .show();
         }
-        else
+        else if (id == R.id.confirmGame)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(game.getName())

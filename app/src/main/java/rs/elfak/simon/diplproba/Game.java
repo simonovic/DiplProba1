@@ -17,10 +17,11 @@ public class Game
     double lng;
     int[] confirmedUsersID;
     int[] invitedUsersID;
+    String dt;
 
     private Game() {}
 
-    public Game(int _id, String name, String desc, String creatorID, String creator, String date, String address, double lat, double lng, int[] confirmedUsersID, int[] invitedUsersID)
+    public Game(int _id, String name, String desc, String creatorID, String creator, String date, String address, double lat, double lng, int[] confirmedUsersID, int[] invitedUsersID, String dt)
     {
         this._id = _id;
         this.name = name;
@@ -33,6 +34,7 @@ public class Game
         this.lng = lng;
         this.confirmedUsersID = confirmedUsersID;
         this.invitedUsersID = invitedUsersID;
+        this.dt = dt;
 
     }
 
@@ -94,5 +96,13 @@ public class Game
 
     public int[] getInvitedUsersID() {
         return invitedUsersID;
+    }
+
+    public String getDt() {
+        return dt;
+    }
+
+    public void setDt(String dt) {
+        this.dt = dt;
     }
 }

@@ -120,9 +120,9 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
         ArrayList<Bitmap> imgBitmap = new ArrayList<Bitmap>();
         String[] encImg;
         if (frsb)
-            encImg = ((MainActivity)getActivity()).getFrReqSentImg().split("bratzna");
+            encImg = ((MainActivity)getActivity()).getFrReqSentImg().split("imgsep");
         else
-            encImg = ((MainActivity)getActivity()).getImgResp().split("bratzna");
+            encImg = ((MainActivity)getActivity()).getImgResp().split("imgsep");
         for (int i = 0; i < encImg.length; i++)
         {
             byte[] decodedString = Base64.decode(encImg[i], Base64.DEFAULT);

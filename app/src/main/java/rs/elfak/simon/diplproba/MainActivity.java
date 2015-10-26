@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity
                         if (!frReqSentStr.equals("")) {
                             searchItem.setVisible(false);
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
-                            fr.getBtn().setText("Zavrsi");
+                            fr.getBtn().setText("Završi");
                             fr.listFriends();
                         }
                     }

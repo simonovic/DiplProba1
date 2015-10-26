@@ -47,8 +47,11 @@
     <string name="delete">Izbaci igru</string>
     <string name="confGame">Potvrdi dolazak</string>
 
+    <string name="enterMes">Unesite poruku...</string>
+
     <string name="title_activity_map">Example action</string>
     <string name="title_activity_profile">Profil</string>
     <string name="title_activity_game">ImeIgre</string>
+    <string name="title_activity_chat">ChatActivity</string>
 
 </resources>

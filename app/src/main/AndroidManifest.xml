@@ -70,6 +70,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="rs.elfak.simon.diplproba.MainActivity" />
         </activity>
+        <activity
+            android:name=".ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:parentActivityName=".MapActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="rs.elfak.simon.diplproba.MapActivity" />
+        </activity>
     </application>
 
 </manifest>

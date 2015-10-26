@@ -108,7 +108,7 @@ public class MainFragment extends Fragment
                 d = "0"+d;
             if (month<10)
                 m = "0"+m;
-            gm.setDatetime(h+":"+min+", "+d+"."+m+"."+year+".");
+            gm.setDt(h+":"+min+", "+d+"."+m+"."+year+".");
         }
         gameAdapter = new GameAdapter(games);
         recView.setAdapter(gameAdapter);

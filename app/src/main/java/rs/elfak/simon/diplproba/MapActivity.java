@@ -3,7 +3,9 @@ package rs.elfak.simon.diplproba;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,11 +21,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     String mode;
     LatLng ll;
     Bundle extras;
+    FloatingActionButton chatBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        chatBtn = (FloatingActionButton)findViewById(R.id.chatBtn);
+        //chatBtn.setVisibility(View.GONE);
+        chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+            }
+        });
 
         extras = getIntent().getExtras();
         mode = extras.getString("mode");
@@ -43,7 +55,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void setUpNewGame()
     {
         ll = new LatLng(43.317758, 21.900435);
-        gmap.addMarker(new MarkerOptions().position(ll));
+        //gmap.addMarker(new MarkerOptions().position(ll));
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
         gmap.setOnMapLongClickListener(this);
     }
