@@ -90,8 +90,8 @@ public class MainFragment extends Fragment
                 date = format.parse(datum);
             } catch (IOException e) {}
             catch (ParseException e) {}
-            String address = addresses.get(0).getAddressLine(0);
-            String city = addresses.get(0).getLocality();
+            String address = "";//addresses.get(0).getAddressLine(0);
+            String city = "";//addresses.get(0).getLocality();
             gm.setAddress(address+", "+city);
             cal.setTime(date);
             int year = cal.get(Calendar.YEAR);

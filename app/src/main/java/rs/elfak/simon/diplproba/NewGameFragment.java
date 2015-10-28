@@ -277,6 +277,5 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
         chFrBool = ((MainActivity)getActivity()).getChosenFr();
         //int trueCount = Arrays.deepToString((Object[])chFrBool).replaceAll("[^t]", "").length();
         numChoosenFr.setText("Broj pozvanih prijatelja: "+trueCnt);
-        Toast.makeText(getActivity().getApplicationContext(), "Radi: "+chFrBool[0], Toast.LENGTH_SHORT).show();
     }
 }

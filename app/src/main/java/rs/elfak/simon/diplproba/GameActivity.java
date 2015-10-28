@@ -80,7 +80,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
 
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         //userID = shPref.getInt(Constants.userIDpref, 0);
-        userID = 42;
+        userID = 41;
     }
 
     private void setUpApiClient()
@@ -197,7 +197,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         long gameTime = gameDate.getTime();
         if (curTime - gameTime > 0 )
         {
-            if ((curTime - gameTime)/1000 > 60000) {
+            if ((curTime - gameTime)/1000 > 60000) {  //smanji vreme na recimo 10 min
                 Toast.makeText(this, "Isteklo je vreme za igru!", Toast.LENGTH_LONG).show();
                 LoginActivity.socket.emit("findGames", userID);
                 finish();
@@ -211,9 +211,15 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                         gameLoc.setLatitude(game.getLat());
                         gameLoc.setLongitude(game.getLng());
                         float metres = myLoc.distanceTo(gameLoc);
-                        if (myLoc.distanceTo(gameLoc) < 30)
+                        if (myLoc.distanceTo(gameLoc) < 300)
                         {
                             Toast.makeText(this, "Igra moze da pocne!", Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(this, MapActivity.class);
+                            double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
+                            i.putExtra("location", pom);
+                            i.putExtra("gameID", game.get_id());
+                            i.putExtra("mode", "game");
+                            startActivity(i);
                         }
                         else
                             Toast.makeText(this, "Niste na lokaciji igre!", Toast.LENGTH_LONG).show();
