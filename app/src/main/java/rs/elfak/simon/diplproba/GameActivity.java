@@ -98,21 +98,6 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    @Override
     protected void onPostResume() {
         super.onPostResume();
         gApiCl.connect();
@@ -143,6 +128,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                     }
                     else if (response.equals("confGame")) {
                         Toast.makeText(getApplicationContext(), "Dolazak potvrdjen!", Toast.LENGTH_LONG).show();
+                        game.addConfID(userID);
                         confFrL.add((numConf +1)+". "+game.getCreator());
                         menu.findItem(R.id.confirmGame).setVisible(false);
                     }
@@ -216,7 +202,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                         gameLoc.setLatitude(game.getLat());
                         gameLoc.setLongitude(game.getLng());
                         float metres = myLoc.distanceTo(gameLoc);
-                        if (myLoc.distanceTo(gameLoc) < 300)
+                        if (myLoc.distanceTo(gameLoc) < 20)
                         {
                             Intent i = new Intent(this, MapActivity.class);
                             double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
@@ -363,6 +349,24 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                     })
                     .show();
         }
+        else {
+            finish();
+            }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }

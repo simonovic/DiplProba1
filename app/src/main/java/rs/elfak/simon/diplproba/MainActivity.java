@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,11 +17,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import org.json.JSONException;
@@ -42,6 +49,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
     boolean chosenFr[];
+    String uName;
 
     public void setUpdate(boolean u) {  update = u; }
     public MenuItem getSearchItem() { return searchItem; }
@@ -62,6 +70,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setUpUI();
+        setUpSocketIO();
+    }
+
+    public void setUpUI()
+    {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -72,14 +86,20 @@ public class MainActivity extends AppCompatActivity
         ab.setDisplayHomeAsUpEnabled(true);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent();
-
         fm = getSupportFragmentManager();
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         editor = shPref.edit();
         userID = shPref.getInt(Constants.userIDpref, 0);
+        uName = shPref.getString(Constants.userNamepref, "");
         fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance())/*.addToBackStack(null)*/.commit();
         nvDrawer.getMenu().getItem(0).setChecked(true);
+        TextView tv = (TextView)findViewById(R.id.unametv);
+        tv.setText(uName);
+    }
 
+    public void setUpSocketIO()
+    {
+        LoginActivity.socket.on("profImgReqResponse", onProfImgReqResponse);
         LoginActivity.socket.on("findUsersResponse", onFindUsersResponse);
         LoginActivity.socket.on("findFriendsResponse", onFindFriendsResponse);
         LoginActivity.socket.on("friendReqResponse", onFriendReqResponse);
@@ -88,7 +108,28 @@ public class MainActivity extends AppCompatActivity
         LoginActivity.socket.on("gameReqResponse", onGameReqResponse);
         LoginActivity.socket.emit("findGames", userID);
         LoginActivity.socket.emit("findFriends", userID);
+        LoginActivity.socket.emit("profImg", userID);
     }
+
+    private Emitter.Listener onProfImgReqResponse = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String response;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        response = data.getString("response");
+                    } catch (JSONException e) { return; }
+                    byte[] decodedString = Base64.decode(response, Base64.DEFAULT);
+                    Bitmap bm = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    ImageView profImg = (ImageView)findViewById(R.id.profImg);
+                    profImg.setImageBitmap(bm);
+                }
+            });
+        }
+    };
 
     private Emitter.Listener onGameReqResponse = new Emitter.Listener() {
         @Override
@@ -567,9 +608,10 @@ public class MainActivity extends AppCompatActivity
             mDrawer.closeDrawer(Gravity.LEFT);
             return;
         }
-        if (backPress)
+        /*if (backPress)
             moveTaskToBack(true); // ili finish();
         else
-            super.onBackPressed();
+            super.onBackPressed();*/
+        moveTaskToBack(true);
     }
 }

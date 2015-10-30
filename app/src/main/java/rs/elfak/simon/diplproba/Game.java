@@ -2,6 +2,7 @@ package rs.elfak.simon.diplproba;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class Game
@@ -36,6 +37,16 @@ public class Game
         this.invitedUsersID = invitedUsersID;
         this.dt = dt;
 
+    }
+
+    public void addConfID(int id)
+    {
+        int pomL = confirmedUsersID.length;
+        int[] pomA = new int[pomL+1];
+        pomA = Arrays.copyOf(confirmedUsersID, pomL+1);
+        pomA[pomL] = id;
+        confirmedUsersID = new int[pomL+1];
+        confirmedUsersID = pomA;
     }
 
     public int get_id() {

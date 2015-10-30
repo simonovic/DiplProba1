@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -40,7 +39,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     GoogleMap gmap;
     HashMap<String, Marker> markers;
     public static List<String> unameL, timeL, messageL;
-    String mode, role, uname;
+    String mode, role, uName;
     LatLng ll;
     Bundle extras;
     FloatingActionButton chatBtn;
@@ -59,9 +58,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         userID = shPref.getInt(Constants.userIDpref, 0);
         gameID = shPref.getInt(Constants.gameIDpref, 0);
-        uname = shPref.getString(Constants.userNamepref, "false");
+        uName = shPref.getString(Constants.userNamepref, "false");
+
         // gde se bude dodeljivala uloga ubaci ovo
-        role = "tracker";
+        role = "coordinator";
         editor = shPref.edit();
         editor.putString(Constants.rolePref, role);
         editor.commit();
@@ -71,6 +71,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         extras = getIntent().getExtras();
         mode = extras.getString("mode");
 
+        LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
         if (mode.equals("game"))
         {
             gameID = extras.getInt("gameID");
@@ -119,7 +120,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         timeL = new ArrayList<String>();
         messageL = new ArrayList<String>();
         markers = new HashMap<>();
-        LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
+        //LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
     }
 
     private void setUpNav()
@@ -185,9 +186,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         } catch (JSONException e) {
                             return;
                         }
-                        if (markers.containsKey(uname)) {
-                            markers.get(uname).setPosition(new LatLng(Double.parseDouble(lat), Double.parseDouble(lng)));
-                        } else {
+
+                        double lt = Double.parseDouble(lat);
+                        double lg = Double.parseDouble(lng);
+                        if (markers.containsKey(uname))
+                            markers.get(uname).setPosition(new LatLng(lt, lg));
+                        else {
                             LatLng pom = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
                             int img;
                             boolean put = false;
@@ -205,6 +209,43 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                                 Marker marker = gmap.addMarker(new MarkerOptions().position(pom).title(uname).icon(BitmapDescriptorFactory.fromResource(img)));
                                 markers.put(uname, marker);
                             }
+                        }
+
+                        Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                        Location frLoc = new Location("frLoc");
+                        frLoc.setLatitude(lt);
+                        frLoc.setLongitude(lg);
+                        String event = "";
+                        boolean ctch = false;
+                        float distance = myLoc.distanceTo(frLoc);
+                        if (role.equals("tracker")) {
+                            if (role1.equals("coordinator") && myLoc.distanceTo(frLoc) < 25) {
+                                ctch = true;
+                                event = "TC";
+                            }
+                        } else if (role.equals("guardian")) {
+                            if (role1.equals("tracker") && myLoc.distanceTo(frLoc) < 25) {
+                                ctch = true;
+                                event = "GT";
+                            }
+                        } else {
+                            if (role1.equals("guardian") && myLoc.distanceTo(frLoc) < 25) {
+                                ctch = true;
+                                event = "CG";
+                            }
+                        }
+                        if (ctch) {
+                            JSONObject data1 = new JSONObject();
+                            try {
+                                data1.put("uname", uName);
+                                data1.put("unameFr", uname);
+                                data1.put("gameID", gameID);
+                                data1.put("mode", "catch");
+                                data1.put("event", event);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            LoginActivity.socket.emit("gameOn", data1);
                         }
                     } else if (response.equals("chat")) {
                         String uname, time, mess;
@@ -230,7 +271,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         JSONObject data = new JSONObject();
         try {
             data.put("id", userID);
-            data.put("uname", uname);
+            data.put("uname", uName);
             data.put("gameID", gameID);
             data.put("lat", location.getLatitude());
             data.put("lng", location.getLongitude());

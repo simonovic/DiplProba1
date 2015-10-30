@@ -117,8 +117,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     }
                     else if (response.equals("free")) {
                         uName = true;
-                        //uname.setBackgroundColor(getResources().getColor(R.color.free));
-                        //uname.setError("Slobodno");
+                        //uName.setBackgroundColor(getResources().getColor(R.color.free));
+                        //uName.setError("Slobodno");
                     }
                 }
             });
@@ -216,7 +216,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 data.put("fname", fn);
                 data.put("lname", ln);
                 data.put("email", em);
-                data.put("uname", un);
+                data.put("uName", un);
                 data.put("upass", up);
                 data.put("buff", encoded);
             } catch (JSONException e) { e.printStackTrace(); }

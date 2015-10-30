@@ -50,7 +50,7 @@ public class ProfileActivity extends Activity
         EditText nameET = (EditText)findViewById(R.id.name);
         EditText unameET = (EditText)findViewById(R.id.uname);
         name = bundle.getString("name");
-        uname = bundle.getString("uname");
+        uname = bundle.getString("uName");
         nameET.setText(name);
         unameET.setText(uname);
         //Button btn = (Button)findViewById(R.id.profBtn);

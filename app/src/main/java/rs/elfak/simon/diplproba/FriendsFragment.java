@@ -160,7 +160,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
             Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
             i.putExtra("id", uid);
             i.putExtra("name", name);
-            i.putExtra("uname", uname);
+            i.putExtra("uName", uname);
             startActivity(i);
         }
     };

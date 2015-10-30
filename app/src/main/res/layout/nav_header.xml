@@ -9,10 +9,18 @@
     android:orientation="vertical"
     android:gravity="bottom" >
 
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profImg"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/userreg"/>
+
     <TextView
+        android:id="@+id/unametv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Header"
         android:textColor="@android:color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
