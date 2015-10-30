@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -42,6 +43,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
     List<String> invFrL, confFrL;
     int userID, numConf;
     SharedPreferences shPref;
+    SharedPreferences.Editor editor;
     Menu menu;
     GoogleApiClient gApiCl;
 
@@ -59,7 +61,11 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
     {
         LoginActivity.socket.on("getInvConfFrResponse", onGetInvConfFrResponse);
         LoginActivity.socket.on("delConfGameReqResponse", onDelConfGameReqResponse);
+        shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
+        editor = shPref.edit();
         game = MainFragment.getGameAtIndex(getIntent().getExtras().getInt("pos"));
+        editor.putInt(Constants.gameIDpref, game.get_id());
+        editor.commit();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -79,8 +85,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         confFrL = new ArrayList<String>();
 
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
-        //userID = shPref.getInt(Constants.userIDpref, 0);
-        userID = 41;
+        userID = shPref.getInt(Constants.userIDpref, 0);
     }
 
     private void setUpApiClient()
@@ -213,7 +218,6 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                         float metres = myLoc.distanceTo(gameLoc);
                         if (myLoc.distanceTo(gameLoc) < 300)
                         {
-                            Toast.makeText(this, "Igra moze da pocne!", Toast.LENGTH_LONG).show();
                             Intent i = new Intent(this, MapActivity.class);
                             double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
                             i.putExtra("location", pom);

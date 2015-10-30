@@ -11,6 +11,7 @@
     <string name="fname">Ime</string>
     <string name="lname">Prezime</string>
     <string name="email">E-mail</string>
+    <string name="img">Učitaj sliku</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -41,6 +42,7 @@
     <string name="cr">Kreirao</string>
     <string name="map">Mapa</string>
     <string name="start">Započni igru</string>
+    <string name="rules">Pravila igre</string>
 
     <string name="invFr">Pozvani prijatelji</string>
     <string name="confFr">Potvrdili dolazak</string>

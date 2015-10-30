@@ -52,7 +52,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHol
     public void onBindViewHolder(GameAdapterHolder holder, final int position) {
         holder.nameTV.setText(games.get(position).getName());
         holder.creatorTV.setText(games.get(position).getCreator());
-        holder.dateTV.setText(games.get(position).getDatetime());
+        holder.dateTV.setText(games.get(position).getDt());
         holder.addressTV.setText(games.get(position).getAddress());
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override

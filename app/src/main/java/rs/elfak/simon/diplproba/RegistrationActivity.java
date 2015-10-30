@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.net.URISyntaxException;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -51,11 +56,18 @@ public class RegistrationActivity extends AppCompatActivity {
 
         socket.on("registrationResponse", onRegResponse);
         socket.on("chUnameResponse", onChPassResponse);
+        setUpUI();
+
+    }
+
+    private void setUpUI()
+    {
         fname = (EditText)findViewById(R.id.fname);
         lname = (EditText)findViewById(R.id.lname);
         email = (EditText)findViewById(R.id.email);
         uname = (EditText)findViewById(R.id.uname);
         upass = (EditText)findViewById(R.id.upass);
+        imgView = (ImageView)findViewById(R.id.image);
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         editor = shPref.edit();
 
@@ -105,7 +117,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     }
                     else if (response.equals("free")) {
                         uName = true;
-                        uname.setError("Slobodno");
+                        //uname.setBackgroundColor(getResources().getColor(R.color.free));
+                        //uname.setError("Slobodno");
                     }
                 }
             });
@@ -146,7 +159,34 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public void onImageClk(View v)
     {
-        Toast.makeText(this, "Klik na sliku!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == 1)
+        {
+            try {
+                Uri selectedImage = data.getData();
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
+                c.moveToFirst();
+                int columnIndex = c.getColumnIndex(filePath[0]);
+                String picturePath = c.getString(columnIndex);
+                c.close();
+                Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
+                int nh = (int)(thumbnail.getHeight()*(2048.0/thumbnail.getWidth()));
+                Bitmap scaled = Bitmap.createScaledBitmap(thumbnail, 2048, nh, true);
+                imgView.setImageBitmap(scaled);
+            }
+            catch (Exception e)
+            {
+                Toast.makeText(this, "Neuspelo učitavanje slike!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public void onCreateBtn(View v)
@@ -166,7 +206,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
         else {
             userName  = un;
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.user);
+            Bitmap bm = ((BitmapDrawable)imgView.getDrawable()).getBitmap(); //BitmapFactory.decodeResource(getResources(), R.drawable.user);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream .toByteArray();

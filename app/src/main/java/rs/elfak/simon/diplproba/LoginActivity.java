@@ -45,18 +45,6 @@ public class LoginActivity extends Activity
         socket.connect();
         name =  (EditText)findViewById(R.id.name);
         pass  = (EditText)findViewById(R.id.pass);
-
-        userID = shPref.getInt(Constants.userIDpref, 0);
-        userName = shPref.getString(Constants.userNamepref,"false");
-        if ((userID != 0) && (!userName.equals("false")))
-        {
-            Intent i = new Intent(this, MainActivity.class);
-            i.putExtra("userID", userID);
-            startActivity(i);
-        }
-
-        // testiranje slanja slika
-        startActivity(new Intent(this, MainActivity.class));
     }
 
     private Emitter.Listener onLoginResponse = new Emitter.Listener() {
@@ -74,14 +62,18 @@ public class LoginActivity extends Activity
                     }
 
                     if (!response.equals("denied")) {
+                        userID = Integer.parseInt(response);
                         editor.putInt(Constants.userIDpref, userID);
                         editor.putString(Constants.userNamepref, userName);
-                        //editor.commit();
-                        //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        editor.commit();
+                        name.setText("");
+                        pass.setText("");
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     } else
                     {
                         name.setText("");
                         pass.setText("");
+                        userName = "false";
                         Toast.makeText(getApplicationContext(), "Pogrešno korisničko ime i/ili lozinka!", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -92,14 +84,10 @@ public class LoginActivity extends Activity
     @Override
     protected void onStart() {
         super.onStart();
-        //editor.putInt(Constants.userIDpref, userID); //ovo je verovatno kad se odjavis
-        //editor.commit();
+        userID = shPref.getInt(Constants.userIDpref, 0);
+        userName = shPref.getString(Constants.userNamepref,"false");
         if ((userID != 0) && (!userName.equals("false")))
-        {
-            Intent i = new Intent(this, MainActivity.class);
-            i.putExtra("userID", userID);
-            startActivity(i);
-        }
+            startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override
@@ -119,15 +107,15 @@ public class LoginActivity extends Activity
         {
             if (n.equals(""))
                 name.setError("Morate uneti korisničko ime!");
-            if (n.equals(""))
+            if (p.equals(""))
                 pass.setError("Morate uneti lozinku!");
         }
         else
         {
             JSONObject data = new JSONObject();
             try {
-                data.put("user", n);
-                data.put("pass", p);
+                data.put("uname", n);
+                data.put("upass", p);
             } catch (JSONException e) { e.printStackTrace(); }
             socket.emit("loginRequest", data);
         }

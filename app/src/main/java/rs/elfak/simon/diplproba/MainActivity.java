@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
     MenuItem searchItem;
     int userID, ID;
     String frResp = "", frResp1 = "", imgResp = "", imgResp1 = "", friends = "", games = "", frReqSentStr = "", frReqSentImg = "";
-    boolean mode, update = false, frReqSent = false;
+    boolean mode, update = false, frReqSent = false, backPress = false;
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
     boolean chosenFr[];
@@ -75,9 +75,7 @@ public class MainActivity extends AppCompatActivity
         fm = getSupportFragmentManager();
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         editor = shPref.edit();
-        //userID = shPref.getInt(Constants.userIDpref, 0);
-        //testiranje
-        userID = 42;
+        userID = shPref.getInt(Constants.userIDpref, 0);
         fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance())/*.addToBackStack(null)*/.commit();
         nvDrawer.getMenu().getItem(0).setChecked(true);
 
@@ -364,25 +362,37 @@ public class MainActivity extends AppCompatActivity
     private void selectDrawerItem(MenuItem menuItem)
     {
         Fragment fragment = null;
-        Class fragClass;
+        Class fragClass = MainFragment.class;
         switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 fragClass = MainFragment.class;
                 searchItem.setVisible(false);
                 LoginActivity.socket.emit("findGames", userID);
+                backPress = true;
                 break;
             case R.id.nav_second_fragment:
                 fragClass = FriendsFragment.class;
                 searchItem.setVisible(true);
                 LoginActivity.socket.emit("findFriends", userID);
+                backPress = false;
                 break;
             case R.id.nav_third_fragment:
                 fragClass = NewGameFragment.class;
                 searchItem.setVisible(false);
+                backPress = false;
                 break;
-            default:
-                fragClass = FriendsFragment.class;
+            case R.id.rules:
+                fragClass = GameRulesFragment.class;
                 searchItem.setVisible(false);
+                backPress = false;
+                break;
+            case R.id.logout:
+                editor.putInt(Constants.userIDpref, 0);
+                backPress = false;
+                editor.putString(Constants.userNamepref, "false");
+                editor.commit();
+                finish();
+                break;
         }
         try {
             fragment = (Fragment)fragClass.newInstance();
@@ -555,6 +565,9 @@ public class MainActivity extends AppCompatActivity
             mDrawer.closeDrawer(Gravity.LEFT);
             return;
         }
-        super.onBackPressed();
+        if (backPress)
+            moveTaskToBack(true); // ili finish();
+        else
+            super.onBackPressed();
     }
 }
