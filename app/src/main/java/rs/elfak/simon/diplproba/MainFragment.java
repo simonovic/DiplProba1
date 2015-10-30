@@ -35,8 +35,8 @@ public class MainFragment extends Fragment
     GameAdapter gameAdapter;
 
     public RecyclerView getRecView() { return recView; }
-
     public static Game getGameAtIndex(int index) { return games.get(index); }
+    public SwipeRefreshLayout getSrl() { return srl; }
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();

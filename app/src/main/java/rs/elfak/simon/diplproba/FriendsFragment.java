@@ -40,10 +40,11 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
     ArrayList<User> friends;
     ListView friendsList;
     View v;
-    SwipeRefreshLayout srl;
+    SwipeRefreshLayout srlFr;
     Button btn;
     int userID;
 
+    public SwipeRefreshLayout getSrlFr() { return srlFr; }
     public ArrayList<User> getFriends() {
         return friends;
     }
@@ -66,28 +67,29 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_friends, container, false);
-        srl = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
+        srlFr = (SwipeRefreshLayout)v.findViewById(R.id.srlFriends);
         friendsList = (ListView) v.findViewById(R.id.listFriends);
         btn = (Button)v.findViewById(R.id.frReq);
         btn.setText("Zahtevi");
         btn.setOnClickListener(this);
         userID = ((MainActivity)getActivity()).getUserID();
-        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        srlFr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                ((MainActivity)getActivity()).setUpdate(true);
                 LoginActivity.socket.emit("findFriends", userID);
             }
         });
-        listFriends();  // premesti u nekidrugi lifecycle
+        listFriends();  // premesti u neki drugi lifecycle
         return v;
     }
 
     public void listFriends()
     {
-        if (srl.isRefreshing())
-            srl.setRefreshing(false);
+        if (srlFr.isRefreshing())
+            srlFr.setRefreshing(false);
 
-        String frList = "";
+        String frList;
         boolean frsb = ((MainActivity)getActivity()).getFrReqSent();
         if (frsb)
             frList = ((MainActivity) getActivity()).getFrReqSentStr();

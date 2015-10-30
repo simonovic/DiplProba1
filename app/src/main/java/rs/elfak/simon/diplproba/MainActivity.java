@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences.Editor editor;
     boolean chosenFr[];
 
+    public void setUpdate(boolean u) {  update = u; }
     public MenuItem getSearchItem() { return searchItem; }
     public String getFrReqSentImg() { return frReqSentImg; }
     public String getFrReqSentStr() { return frReqSentStr; }
@@ -87,9 +88,6 @@ public class MainActivity extends AppCompatActivity
         LoginActivity.socket.on("gameReqResponse", onGameReqResponse);
         LoginActivity.socket.emit("findGames", userID);
         LoginActivity.socket.emit("findFriends", userID);
-
-
-        //startActivity(new Intent(this, MapActivity.class)); // samo za testiranje
     }
 
     private Emitter.Listener onGameReqResponse = new Emitter.Listener() {
@@ -114,6 +112,8 @@ public class MainActivity extends AppCompatActivity
                     {
                         games = "";
                         MainFragment mf = (MainFragment) fm.findFragmentById(R.id.flContent);
+                        if (mf.getSrl().isRefreshing())
+                            mf.getSrl().setRefreshing(false);
                         mf.getRecView().setAdapter(null);
                     }
                 }
@@ -314,6 +314,8 @@ public class MainActivity extends AppCompatActivity
                         imgResp = imgResp1 = img;
                         if (update) {
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
+                            if (fr.getSrlFr().isRefreshing())
+                                fr.getSrlFr().setRefreshing(false);
                             fr.listFriends();
                             update = false;
                         }
