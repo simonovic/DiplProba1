@@ -349,6 +349,14 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                     })
                     .show();
         }
+        else if (id == R.id.navigation)
+        {
+            Intent i = new Intent(this, MapActivity.class);
+            double[] pom = {game.getLat(), game.getLng()};
+            i.putExtra("location", pom);
+            i.putExtra("mode", "nav");
+            startActivity(i);
+        }
         else {
             finish();
             }

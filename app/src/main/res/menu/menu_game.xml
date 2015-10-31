@@ -3,6 +3,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/navigation"
+        android:icon="@drawable/ic_directions"
+        app:showAsAction="always"
+        android:title="@string/nav"/>
+
+    <item
         android:id="@+id/confirmGame"
         android:icon="@drawable/ic_verified_user"
         app:showAsAction="always"
