@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -19,15 +20,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -184,7 +182,7 @@ public class MainActivity extends AppCompatActivity
                         LoginActivity.socket.emit("findGames", userID);
                         nvDrawer.getMenu().getItem(0).setChecked(true);
                     } else {
-                        Toast.makeText(getApplicationContext(), "Neuspelo kreirenje igre!", Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.mainLL), "Neuspelo kreirenje igre!", Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -206,10 +204,10 @@ public class MainActivity extends AppCompatActivity
                     } catch (JSONException e) { return; }
 
                     if (fORu.equals("f")) {
-                        Toast.makeText(getApplicationContext(), "f", Toast.LENGTH_SHORT).show();
+                        //Snackbar.make(findViewById(R.id.mainLL), "f", Snackbar.LENGTH_LONG).show();
                         imgResp = imgResp1 = response;
                     } else {
-                        Toast.makeText(getApplicationContext(), "u", Toast.LENGTH_SHORT).show();
+                        //Snackbar.make(findViewById(R.id.mainLL), "u", Snackbar.LENGTH_LONG).show();
                         imgResp = response;
                     }
                 }
@@ -232,23 +230,23 @@ public class MainActivity extends AppCompatActivity
                     if (response.equals("failed"))
                     {
                         if (img.equals("gpbp"))
-                            Toast.makeText(getApplicationContext(), "Neuspelo brisanja prijatelja!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.mainLL), "Neuspelo brisanja prijatelja!", Snackbar.LENGTH_LONG).show();
                         else if (img.equals("gzp"))
-                            Toast.makeText(getApplicationContext(), "Neuspelo slanje zahteva za prijateljstvo!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.mainLL), "Neuspelo slanje zahteva za prijateljstvo!", Snackbar.LENGTH_LONG).show();
                         else if (img.equals("gpz"))
-                            Toast.makeText(getApplicationContext(), "Neuspelo pribavaljanje zahteva!!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.mainLL), "Neuspelo pribavaljanje zahteva!", Snackbar.LENGTH_LONG).show();
                         else if (img.equals("gbz"))
-                            Toast.makeText(getApplicationContext(), "Neuspelo brisanje zahteva!!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.mainLL), "Neuspelo brisanje zahteva!", Snackbar.LENGTH_LONG).show();
                     } else if (response.equals("denied"))
                     {
                         if (img.equals("AS"))
-                            Toast.makeText(getApplicationContext(), "Zahtev je vec poslat!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.mainLL), "Zahtev je vec poslat!", Snackbar.LENGTH_LONG).show();
                         else
-                            Toast.makeText(getApplicationContext(), "Zahtev je vec primljen!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.mainLL), "Zahtev je vec primljen!", Snackbar.LENGTH_LONG).show();
                     }
                     else if (response.equals("delReq"))
                     {
-                        Toast.makeText(getApplicationContext(), "Zahtev izbrisan!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.mainLL), "Zahtev izbrisan!", Snackbar.LENGTH_LONG).show();
                         JSONObject data1 = new JSONObject();
                         try {
                             data1.put("_id", userID);
@@ -260,15 +258,15 @@ public class MainActivity extends AppCompatActivity
                     {
                         update = true;
                         LoginActivity.socket.emit("findFriends", userID);
-                        Toast.makeText(getApplicationContext(), "Izbrisan prijatelj!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.mainLL), "Izbrisan prijatelj!", Snackbar.LENGTH_LONG).show();
                     }
                     else if (response.equals("sentFrReq"))
                     {
-                        Toast.makeText(getApplicationContext(), "Zahtev poslat!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.mainLL), "Zahtev poslat!", Snackbar.LENGTH_LONG).show();
                     }
                     else if (response.equals("confFr"))
                     {
-                        Toast.makeText(getApplicationContext(), "Dodat prijatelj!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.mainLL), "Dodat prijatelj!", Snackbar.LENGTH_LONG).show();
                         LoginActivity.socket.emit("findFriends", userID);
                         JSONObject data1 = new JSONObject();
                         try {
@@ -279,7 +277,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     else if (response.equals("nomatch"))
                     {
-                        Toast.makeText(getApplicationContext(), "Nema zahteva za prijateljstvom!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.mainLL), "Nema zahteva za prijateljstvom!", Snackbar.LENGTH_LONG).show();
                         frReqSent = false;
                         searchItem.setVisible(true);
                         update = true;
@@ -361,7 +359,6 @@ public class MainActivity extends AppCompatActivity
                             update = false;
                         }
                     } else {
-                        Toast.makeText(getApplicationContext(), "Nema prijatelja!", Toast.LENGTH_SHORT).show();
                         frResp = frResp1 = "";
                         imgResp = imgResp1 = "";
                         if (update) {

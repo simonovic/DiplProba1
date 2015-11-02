@@ -111,8 +111,6 @@ public class RegistrationActivity extends AppCompatActivity {
                     }
                     else if (response.equals("free")) {
                         uName = true;
-                        //uName.setBackgroundColor(getResources().getColor(R.color.free));
-                        //uName.setError("Slobodno");
                     }
                 }
             });
@@ -132,13 +130,13 @@ public class RegistrationActivity extends AppCompatActivity {
                     } catch (JSONException e) { return; }
 
                     if (response.equals("failed")) {
-                        Snackbar.make(findViewById(R.id.regLL), "Neuspelo kreiranje naloga, pokušajte ponovo!", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.regLL), "Neuspelo kreiranje naloga!", Snackbar.LENGTH_LONG).show();
                     }
                     else {
                         userID = Integer.parseInt(response);
                         editor.putInt(Constants.userIDpref, userID);
                         editor.putString(Constants.userNamepref, userName);
-                        //editor.commit();
+                        editor.commit();
                         fname.setText("");
                         lname.setText("");
                         email.setText("");
@@ -210,7 +208,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 data.put("fname", fn);
                 data.put("lname", ln);
                 data.put("email", em);
-                data.put("uName", un);
+                data.put("uname", un);
                 data.put("upass", up);
                 data.put("buff", encoded);
             } catch (JSONException e) { e.printStackTrace(); }
