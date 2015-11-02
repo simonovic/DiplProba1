@@ -39,7 +39,7 @@ import java.util.List;
 public class GameActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener
 {
-    Game game;
+    static Game game;
     EditText a,b,c,d,e;
     ArrayList<User> invFrAList, confFrAList;
     List<String> invFrL, confFrL;
@@ -49,6 +49,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
     Menu menu;
     GoogleApiClient gApiCl;
     Button btn;
+
+    public static Game getGame() { return game; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,10 +142,10 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                     }
                     else if (response.equals("onStartGame")) {
                         if (img.equals("ok")) {
-                            Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
-                            /*Location myLoc = new Location("blabla");
+                            //Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                            Location myLoc = new Location("blabla");
                             myLoc.setLatitude(43.31926517);
-                            myLoc.setLongitude(21.89886868);*/
+                            myLoc.setLongitude(21.89886868);
                             Intent i = new Intent(getApplicationContext(), MapActivity.class);
                             double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
                             double[] gpom = {game.getLat(), game.getLng()};
@@ -223,10 +225,10 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                 else
                 {
                     if (gApiCl.isConnected()) {
-                        Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
-                        /*Location myLoc = new Location("blabla");
+                        //Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                        Location myLoc = new Location("blabla");
                         myLoc.setLatitude(43.31926517);
-                        myLoc.setLongitude(21.89886868);*/
+                        myLoc.setLongitude(21.89886868);
                         if (myLoc != null) {
                             Location gameLoc = new Location("gameLocation");
                             gameLoc.setLatitude(game.getLat());

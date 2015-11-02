@@ -75,7 +75,7 @@ public class ChatActivity extends AppCompatActivity
                     if (response.equals("chat")) {
                         String uname, time, mess;
                         try {
-                            uname = data.getString("uName");
+                            uname = data.getString("uname");
                             time = data.getString("time");
                             mess = data.getString("message");
                         } catch (JSONException e) { return; }
@@ -104,7 +104,7 @@ public class ChatActivity extends AppCompatActivity
             try {
                 data.put("id", userID);
                 data.put("gameID", gameID);
-                data.put("uName", uname);
+                data.put("uname", uname);
                 data.put("time", time);
                 data.put("mess", mess);
                 data.put("role", role);

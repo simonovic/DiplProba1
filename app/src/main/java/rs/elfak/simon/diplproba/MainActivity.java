@@ -546,6 +546,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (!newText.equals("")) {

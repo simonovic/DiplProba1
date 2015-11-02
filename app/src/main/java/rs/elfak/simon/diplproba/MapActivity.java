@@ -10,10 +10,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.google.android.gms.common.ConnectionResult;
@@ -67,6 +69,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     String json = "";
     ProgressDialog progD;
     boolean gameON;
+    Game game;
+    Button roleBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         setContentView(R.layout.activity_map);
 
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
+        editor = shPref.edit();
         userID = shPref.getInt(Constants.userIDpref, 0);
         gameID = shPref.getInt(Constants.gameIDpref, 0);
         uName = shPref.getString(Constants.userNamepref, "false");
@@ -81,12 +86,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         chatBtn = (FloatingActionButton)findViewById(R.id.chatBtn);
         progD = new ProgressDialog(this);
         progD.setCanceledOnTouchOutside(false);
-
-        // gde se bude dodeljivala uloga ubaci ovo
-        role = "coordinator";
-        editor = shPref.edit();
-        editor.putString(Constants.rolePref, role);
-        editor.commit();
+        roleBtn = (Button)findViewById(R.id.roleBtn);
+        roleBtn.setVisibility(View.GONE);
 
         extras = getIntent().getExtras();
         mode = extras.getString("mode");
@@ -99,6 +100,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 waitForCheckIn();
             progD.setMessage("Igra uskoro počinje...");
             progD.show();
+            game = GameActivity.getGame();
         }
         else if (mode.equals("nav"))
         {
@@ -261,17 +263,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         boolean ctch = false;
                         float distance = myLoc.distanceTo(frLoc);
                         if (role.equals("tracker")) {
-                            if (role1.equals("coordinator") && distance < 5) {
+                            if (role1.equals("coordinator") && distance < 10) {
                                 ctch = true;
                                 event = "TC";
                             }
                         } else if (role.equals("guardian")) {
-                            if (role1.equals("tracker") && distance < 5) {
+                            if (role1.equals("tracker") && distance < 10) {
                                 ctch = true;
                                 event = "GT";
                             }
                         } else {
-                            if (role1.equals("guardian") && distance < 5) {
+                            if (role1.equals("guardian") && distance < 10) {
                                 ctch = true;
                                 event = "CG";
                             }
@@ -304,11 +306,40 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         progD.dismiss();
                         Snackbar.make(findViewById(R.id.linMap), "Nedovoljan broj igrača!", Snackbar.LENGTH_INDEFINITE).show();
                     } else if (response.equals("goHide")) {
+                        JSONObject data2 = new JSONObject();
+                        int time;
                         try {
                             radius = data.getInt("radius");
+                            time = data.getInt("time");
                             setUpGame();
                             progD.dismiss();
+                            data2.put("gameID", gameID);
+                            data2.put("id", userID);
+                            data2.put("mode", "a");
                         } catch (JSONException e) { return; }
+                        if (userID == Integer.parseInt(game.getCreatorID()))
+                            LoginActivity.socket.emit("roleInit", data2);
+                        roleBtn.setVisibility(View.VISIBLE);
+                        new CountDownTimer(time, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                int min = (int)millisUntilFinished/60000;
+                                int sec = (int)(millisUntilFinished/1000)%60;
+                                String s = ""+sec;
+                                if (sec < 10)
+                                    s = "0"+sec;
+                                roleBtn.setText("0"+min+":"+s);
+                            }
+                            @Override
+                            public void onFinish() {
+                                if (role.equals("coordinator"))
+                                    roleBtn.setText("KOORDINATOR");
+                                else if (role.equals("guardian"))
+                                    roleBtn.setText("ZAŠTITNIK");
+                                else
+                                    roleBtn.setText("TRAGAČ");
+                            }
+                        }.start();
                     } else if (response.equals("gameON")) {
                         gameON = true;
                     } else if (response.equals("endT")) {
@@ -328,7 +359,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         }
                         else
                             markers.get(uname).remove();
+                    } else if (response.equals("getRole")) {
+                        JSONObject data3 = new JSONObject();
+                        try {
+                            role = data.getString("role");
+                            data3.put("gameID", gameID);
+                            data3.put("id", userID);
+                            data3.put("role", role);
+                            data3.put("mode", "b");
+                        } catch (JSONException e) { return; }
+                        LoginActivity.socket.emit("roleInit", data3);
+                        editor.putString(Constants.rolePref, role);
+                        editor.commit();
                     }
+
                 }
             });
         }
@@ -345,6 +389,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
+        dialog.setCancelable(false);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
         dialog.show();
     }
 
@@ -352,9 +403,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onLocationChanged(Location location) {
         if (mode.equals("game") && gameON)
         {
-            /*Location myLoc = new Location("blabla");
+            Location myLoc = new Location("blabla");
             myLoc.setLatitude(43.31926517);
-            myLoc.setLongitude(21.89886868);*/
+            myLoc.setLongitude(21.89886868);
             if (location.distanceTo(gmLoc) < radius) {
                 JSONObject data = new JSONObject();
                 try {

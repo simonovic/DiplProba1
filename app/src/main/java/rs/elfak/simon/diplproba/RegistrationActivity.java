@@ -1,6 +1,5 @@
 package rs.elfak.simon.diplproba;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,17 +18,12 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.net.URISyntaxException;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -74,7 +69,6 @@ public class RegistrationActivity extends AppCompatActivity {
         uname.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Toast.makeText(getApplicationContext(), "Kucanje!", Toast.LENGTH_SHORT).show();
                 String up = uname.getText().toString();
                 if (up.length() < 6) {
                     uname.setError("Minimum 6 karaktera!");
@@ -138,7 +132,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     } catch (JSONException e) { return; }
 
                     if (response.equals("failed")) {
-                        Toast.makeText(getApplicationContext(), "Neuspelo kreiranje naloga, pokušajte ponovo!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.regLL), "Neuspelo kreiranje naloga, pokušajte ponovo!", Snackbar.LENGTH_LONG).show();
                     }
                     else {
                         userID = Integer.parseInt(response);
@@ -184,7 +178,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
             catch (Exception e)
             {
-                Toast.makeText(this, "Neuspelo učitavanje slike!", Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.regLL), "Neuspelo učitavanje slike!", Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -199,10 +193,10 @@ public class RegistrationActivity extends AppCompatActivity {
         up = upass.getText().toString();
 
         if (fn.isEmpty() || ln.isEmpty() || em.isEmpty() || un.isEmpty() || up.isEmpty()) {
-            Toast.makeText(this, "Popunite sva polja!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.regLL), "Popunite sva polja!", Snackbar.LENGTH_LONG).show();
         }
         else if (!uName) {
-            Toast.makeText(this, "Nevalidno korisničko ime!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.regLL), "Nevalidno korisničko ime!", Snackbar.LENGTH_LONG).show();
         }
         else {
             userName  = un;
