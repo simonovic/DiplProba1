@@ -1,6 +1,7 @@
 package rs.elfak.simon.diplproba;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,6 +48,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
     SharedPreferences.Editor editor;
     Menu menu;
     GoogleApiClient gApiCl;
+    Button btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         game = MainFragment.getGameAtIndex(getIntent().getExtras().getInt("pos"));
         editor.putInt(Constants.gameIDpref, game.get_id());
         editor.commit();
+        shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
+        userID = shPref.getInt(Constants.userIDpref, 0);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -81,11 +86,12 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         c.setText(game.getDt());
         d.setText(game.getAddress());
         e.setText(game.getDesc());
+        btn = (Button)findViewById(R.id.startGameBtn);
+        if (Integer.parseInt(game.getCreatorID()) != userID)
+            btn.setText(R.string.join);
         invFrL = new ArrayList<String>();
         confFrL = new ArrayList<String>();
 
-        shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
-        userID = shPref.getInt(Constants.userIDpref, 0);
     }
 
     private void setUpApiClient()
@@ -132,11 +138,31 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                         confFrL.add((numConf +1)+". "+game.getCreator());
                         menu.findItem(R.id.confirmGame).setVisible(false);
                     }
+                    else if (response.equals("onStartGame")) {
+                        if (img.equals("ok")) {
+                            Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                            /*Location myLoc = new Location("blabla");
+                            myLoc.setLatitude(43.31926517);
+                            myLoc.setLongitude(21.89886868);*/
+                            Intent i = new Intent(getApplicationContext(), MapActivity.class);
+                            double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
+                            double[] gpom = {game.getLat(), game.getLng()};
+                            i.putExtra("location", pom);
+                            i.putExtra("glocation", gpom);
+                            i.putExtra("gameID", game.get_id());
+                            i.putExtra("mode", "game");
+                            i.putExtra("creator", "no");
+                            startActivity(i);
+                        } else if (img.equals("vji"))
+                            Snackbar.make(findViewById(R.id.actgamecl), "Isteklo je vreme za prijavu!", Snackbar.LENGTH_LONG).show();
+                        else
+                            Snackbar.make(findViewById(R.id.actgamecl), "Igra još uvek nije počela!", Snackbar.LENGTH_LONG).show();
+                    }
                     else { // "failed"
                         if (img.equals("gbi"))
-                            Toast.makeText(getApplicationContext(), "Neuspelo brisanje igre!", Toast.LENGTH_LONG).show();
+                            Snackbar.make(findViewById(R.id.actgamecl), "Neuspelo brisanje igre!", Snackbar.LENGTH_LONG).show();
                         else if (img.equals("gpi"))
-                            Toast.makeText(getApplicationContext(), "Neuspela potvrda dolaska!", Toast.LENGTH_LONG).show();
+                            Snackbar.make(findViewById(R.id.actgamecl), "Neuspela potvrda dolaska!", Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -177,59 +203,77 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
     };
 
     public void onStartGameBtn(View v) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        Date gameDate = null;
-        Date curDate = new Date();
-        String datum = game.getDatetime().substring(0, 19);
-        try {
-            gameDate = format.parse(datum);
-        } catch (ParseException e) { e.printStackTrace(); }
-        long curTime = curDate.getTime();
-        long gameTime = gameDate.getTime();
-        if (curTime - gameTime > 0 )
-        {
-            if ((curTime - gameTime)/1000 > 60000) {  //smanji vreme na recimo 10 min
-                Toast.makeText(this, "Isteklo je vreme za igru!", Toast.LENGTH_LONG).show();
-                LoginActivity.socket.emit("findGames", userID);
-                finish();
-            }
-            else
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Date gameDate = null;
+            Date curDate = new Date();
+            String datum = game.getDatetime().substring(0, 19);
+            try {
+                gameDate = format.parse(datum);
+            } catch (ParseException e) { e.printStackTrace(); }
+            long curTime = curDate.getTime();
+            long gameTime = gameDate.getTime();
+            if (curTime - gameTime > 0 )
             {
-                if (gApiCl.isConnected()) {
-                    Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
-                    if (myLoc != null) {
-                        Location gameLoc = new Location("gameLocation");
-                        gameLoc.setLatitude(game.getLat());
-                        gameLoc.setLongitude(game.getLng());
-                        float metres = myLoc.distanceTo(gameLoc);
-                        if (myLoc.distanceTo(gameLoc) < 20)
-                        {
-                            Intent i = new Intent(this, MapActivity.class);
-                            double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
-                            i.putExtra("location", pom);
-                            i.putExtra("gameID", game.get_id());
-                            i.putExtra("mode", "game");
-                            startActivity(i);
-                        }
-                        else
-                            Toast.makeText(this, "Niste na lokaciji igre!", Toast.LENGTH_LONG).show();
-                    }
+                if ((curTime - gameTime)/1000 > 60000) {  //smanji vreme na recimo 10 min
+                    Snackbar.make(findViewById(R.id.actgamecl), "Isteklo je vreme za igru!", Snackbar.LENGTH_LONG).show();
+                    LoginActivity.socket.emit("findGames", userID);
+                    finish();
                 }
                 else
-                    Toast.makeText(this, "Neuspelo povezivanje sa Google Servisima!", Toast.LENGTH_LONG).show();
-            }
-        }
-        else
-            Toast.makeText(this, "Jos nije pocela igra!", Toast.LENGTH_LONG).show();
-    }
+                {
+                    if (gApiCl.isConnected()) {
+                        Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                        /*Location myLoc = new Location("blabla");
+                        myLoc.setLatitude(43.31926517);
+                        myLoc.setLongitude(21.89886868);*/
+                        if (myLoc != null) {
+                            Location gameLoc = new Location("gameLocation");
+                            gameLoc.setLatitude(game.getLat());
+                            gameLoc.setLongitude(game.getLng());
+                            float metres = myLoc.distanceTo(gameLoc);
+                            if (metres < 20)
+                            {
+                                if (Integer.parseInt(game.getCreatorID()) == userID) { //creator)
+                                    JSONObject data = new JSONObject();
+                                    try {
+                                        data.put("_id", userID);
+                                        data.put("mode", "start");
+                                        data.put("gameID", game.get_id());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    LoginActivity.socket.emit("startGame", data);
 
-    public void onMapBtn(View v)
-    {
-        Intent i = new Intent(this, MapActivity.class);
-        double[] pom = {game.getLat(), game.getLng()};
-        i.putExtra("location", pom);
-        i.putExtra("mode", "nav");
-        startActivity(i);
+                                    Intent i = new Intent(this, MapActivity.class);
+                                    double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
+                                    double[] gpom = {game.getLat(), game.getLng()};
+                                    i.putExtra("location", pom);
+                                    i.putExtra("glocation", gpom);
+                                    i.putExtra("gameID", game.get_id());
+                                    i.putExtra("mode", "game");
+                                    i.putExtra("creator", "yes");
+                                    startActivity(i);
+                                } else {
+                                    JSONObject data = new JSONObject();
+                                    try {
+                                        data.put("_id", userID);
+                                        data.put("mode", "join");
+                                        data.put("gameID", game.get_id());
+                                    } catch (JSONException e) { e.printStackTrace(); }
+                                    LoginActivity.socket.emit("startGame", data);
+                                }
+                            }
+                            else
+                                Snackbar.make(findViewById(R.id.actgamecl), "Niste na lokaciji igre!", Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                    else
+                        Snackbar.make(findViewById(R.id.actgamecl), "Neuspelo povezivanje sa Google Servisima!", Snackbar.LENGTH_LONG).show();
+                }
+            }
+            else
+                Snackbar.make(findViewById(R.id.actgamecl), "Još uvek nije vreme za igru!", Snackbar.LENGTH_LONG).show();
     }
 
     private void getInvConfFr()

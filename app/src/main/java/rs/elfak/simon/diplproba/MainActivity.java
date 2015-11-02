@@ -364,11 +364,11 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(getApplicationContext(), "Nema prijatelja!", Toast.LENGTH_SHORT).show();
                         frResp = frResp1 = "";
                         imgResp = imgResp1 = "";
-                        //if (update) {
+                        if (update) {
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
                             fr.getFriendsList().setAdapter(null);
                             if (update) update = false;
-                        //}
+                        }
                     }
                 }
             });

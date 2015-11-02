@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/actgamecl">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -114,26 +115,6 @@
                        android:focusableInTouchMode="false"/>
                </android.support.design.widget.TextInputLayout>
 
-             <!-- <Button
-                    android:layout_width="0dp"
-                    android:layout_height="37dp"
-                    android:text="@string/map"
-                    android:id="@+id/mapBtn"
-                    android:layout_marginTop="10dp"
-                    android:stateListAnimator="@drawable/my_animator"
-                    android:background="@drawable/mybutton"
-                    android:layout_marginLeft="4dp"
-                    android:onClick="onMapBtn"
-                    android:layout_weight="5.60"
-                    android:layout_marginRight="10dp" />
-
-            <ImageButton
-                android:layout_weight="5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:onClick="onMapBtn"
-                android:src="@android:drawable/ic_menu_directions"/> -->
-
         </LinearLayout>
 
            <android.support.design.widget.TextInputLayout
@@ -179,9 +160,9 @@
                android:id="@+id/startGameBtn"
                android:onClick="onStartGameBtn"
                android:layout_marginTop="20dp"
-               android:stateListAnimator="@drawable/my_animator"
-               android:background="@drawable/mybutton"
                android:layout_marginBottom="20dp" />
+           <!-- android:stateListAnimator="@drawable/my_animator"
+                android:background="@drawable/mybutton" -->
        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

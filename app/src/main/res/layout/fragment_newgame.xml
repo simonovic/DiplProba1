@@ -58,8 +58,6 @@
                 android:text="@string/choose"
                 android:id="@+id/timeBtn"
                 android:layout_marginTop="10dp"
-                android:stateListAnimator="@drawable/my_animator"
-                android:background="@drawable/mybutton"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="5.60"
                 android:layout_marginRight="10dp" />
@@ -94,8 +92,6 @@
                 android:text="@string/choose"
                 android:id="@+id/dateBtn"
                 android:layout_marginTop="10dp"
-                android:stateListAnimator="@drawable/my_animator"
-                android:background="@drawable/mybutton"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="5.60"
                 android:layout_marginRight="10dp" />
@@ -154,9 +150,7 @@
             android:layout_height="wrap_content"
             android:text="@string/choose1"
             android:id="@+id/chUser"
-            android:layout_marginTop="10dp"
-            android:stateListAnimator="@drawable/my_animator"
-            android:background="@drawable/mybutton"/>
+            android:layout_marginTop="10dp" />
 
         <Button
             android:layout_width="match_parent"
@@ -164,8 +158,6 @@
             android:text="@string/createGame"
             android:id="@+id/createGame"
             android:layout_marginTop="20dp"
-            android:stateListAnimator="@drawable/my_animator"
-            android:background="@drawable/mybutton"
             android:layout_marginBottom="20dp" />
 
     </LinearLayout>

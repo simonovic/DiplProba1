@@ -1,13 +1,17 @@
 package rs.elfak.simon.diplproba;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -27,23 +31,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
@@ -58,7 +57,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     Bundle extras;
     FloatingActionButton chatBtn;
     GoogleApiClient gApiCl;
-    int userID, gameID;
+    int userID, gameID, radius;
     Location gmLoc;
     static final LocationRequest locRequest = LocationRequest.create()
             .setInterval(3000).setFastestInterval(3000).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -66,6 +65,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     SharedPreferences.Editor editor;
     InputStream is = null;
     String json = "";
+    ProgressDialog progD;
+    boolean gameON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         userID = shPref.getInt(Constants.userIDpref, 0);
         gameID = shPref.getInt(Constants.gameIDpref, 0);
         uName = shPref.getString(Constants.userNamepref, "false");
+        gameON = false;
+        chatBtn = (FloatingActionButton)findViewById(R.id.chatBtn);
+        progD = new ProgressDialog(this);
+        progD.setCanceledOnTouchOutside(false);
 
         // gde se bude dodeljivala uloga ubaci ovo
         role = "coordinator";
@@ -83,38 +88,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         editor.putString(Constants.rolePref, role);
         editor.commit();
 
-        chatBtn = (FloatingActionButton)findViewById(R.id.chatBtn);
-
         extras = getIntent().getExtras();
         mode = extras.getString("mode");
 
         LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
         if (mode.equals("game"))
         {
-            gameID = extras.getInt("gameID");
-            JSONObject data = new JSONObject();
-            try {
-                data.put("id", userID);
-                data.put("role", role);
-                data.put("gameID", gameID);
-            } catch (JSONException e) { e.printStackTrace(); }
-            LoginActivity.socket.emit("startGame", data);
+            //gameID = extras.getInt("gameID");
+            if (extras.getString("creator").equals("yes"))
+                waitForCheckIn();
+            progD.setMessage("Igra uskoro počinje...");
+            progD.show();
+        }
+        else if (mode.equals("nav"))
+        {
+            progD.setMessage("Navigacija se učitava...");
+            progD.show();
         }
 
         SupportMapFragment smapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         smapFrag.getMapAsync(this);
-
-        /*Snackbar.make(findViewById(R.id.linMap), "Snackbar", Snackbar.LENGTH_INDEFINITE)
-                .setAction("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
-                .show();*/
     }
 
-    private void setUpGame()
+    private void setUpApiClient()
     {
         gApiCl = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -122,6 +118,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 .addOnConnectionFailedListener(this)
                 .build();
         gApiCl.connect();
+    }
+
+    private void setUpGame()
+    {
+        setUpApiClient();
         chatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,16 +132,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         gameID = extras.getInt("gameID");
         double[] pom = extras.getDoubleArray("location");
         ll = new LatLng(pom[0], pom[1]);
+        pom = extras.getDoubleArray("glocation");
         gmLoc = new Location("gmrLoc");
         gmLoc.setLatitude(pom[0]);
         gmLoc.setLongitude(pom[1]);
-        gmap.addCircle(new CircleOptions().center(ll).radius(Constants.area).strokeWidth(5).strokeColor(Color.BLUE)/*.fillColor(R.color.area)*/);
+        gmap.addCircle(new CircleOptions().center(ll).radius(radius).strokeWidth(5).strokeColor(Color.BLUE)/*.fillColor(R.color.area)*/);
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
         unameL = new ArrayList<String>();
         timeL = new ArrayList<String>();
         messageL = new ArrayList<String>();
         markers = new HashMap<>();
-        //LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
     }
 
     private void setUpNav()
@@ -150,22 +151,34 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         ll = new LatLng(pom[0], pom[1]);
         gmap.addMarker(new MarkerOptions().position(ll));
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-
-        gApiCl = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        gApiCl.connect();
+        setUpApiClient();
+        //gApiCl.connect();
     }
 
     public void setUpNewGame()
     {
         chatBtn.setVisibility(View.GONE);
         ll = new LatLng(43.317758, 21.900435);
-        //gmap.addMarker(new MarkerOptions().position(ll));
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
         gmap.setOnMapLongClickListener(this);
+    }
+
+    private void waitForCheckIn()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {e.printStackTrace();}
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("mode", "stopJoin");
+                    data.put("gameID", gameID);
+                } catch (JSONException e) { e.printStackTrace(); }
+                LoginActivity.socket.emit("startGame", data);
+            }
+        }).start();
     }
 
     @Override
@@ -178,8 +191,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             setUpNav();
         else if (mode.equals("newGame"))
             setUpNewGame();
-        else if (mode.equals("game"))
-            setUpGame();
+        //else if (mode.equals("game"))
+            //setUpGame();
     }
 
     @Override
@@ -204,12 +217,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         return;
                     }
                     if (response.equals("location")) {
-                        String uname, lat, lng, role1;
+                        String uname, lat, lng, role1, frID;
                         try {
                             uname = data.getString("uname");
                             lat = data.getString("lat");
                             lng = data.getString("lng");
                             role1 = data.getString("role");
+                            frID = data.getString("id");
                         } catch (JSONException e) {  return; }
 
                         double lt = Double.parseDouble(lat);
@@ -237,6 +251,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         }
 
                         Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                        /*Location myLoc = new Location("blabla");
+                        myLoc.setLatitude(43.31926517);
+                        myLoc.setLongitude(21.89886868);*/
                         Location frLoc = new Location("frLoc");
                         frLoc.setLatitude(lt);
                         frLoc.setLongitude(lg);
@@ -244,17 +261,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         boolean ctch = false;
                         float distance = myLoc.distanceTo(frLoc);
                         if (role.equals("tracker")) {
-                            if (role1.equals("coordinator") && myLoc.distanceTo(frLoc) < 25) {
+                            if (role1.equals("coordinator") && distance < 5) {
                                 ctch = true;
                                 event = "TC";
                             }
                         } else if (role.equals("guardian")) {
-                            if (role1.equals("tracker") && myLoc.distanceTo(frLoc) < 25) {
+                            if (role1.equals("tracker") && distance < 5) {
                                 ctch = true;
                                 event = "GT";
                             }
                         } else {
-                            if (role1.equals("guardian") && myLoc.distanceTo(frLoc) < 25) {
+                            if (role1.equals("guardian") && distance < 5) {
                                 ctch = true;
                                 event = "CG";
                             }
@@ -262,8 +279,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         if (ctch) {
                             JSONObject data1 = new JSONObject();
                             try {
-                                data1.put("uname", uName);
-                                data1.put("unameFr", uname);
+                                data1.put("uname", uname);
+                                data1.put("frID", frID);
                                 data1.put("gameID", gameID);
                                 data1.put("mode", "catch");
                                 data1.put("event", event);
@@ -278,25 +295,67 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             uname = data.getString("uname");
                             time = data.getString("time");
                             mess = data.getString("message");
-                        } catch (JSONException e) {
-                            return;
-                        }
+                        } catch (JSONException e) { return; }
                         Toast.makeText(getApplicationContext(), uname + ", " + time + ", " + mess, Toast.LENGTH_LONG).show();
                         unameL.add(uname);
                         timeL.add(time);
                         messageL.add(mess);
+                    } else if (response.equals("nep")) {
+                        progD.dismiss();
+                        Snackbar.make(findViewById(R.id.linMap), "Nedovoljan broj igrača!", Snackbar.LENGTH_INDEFINITE).show();
+                    } else if (response.equals("goHide")) {
+                        try {
+                            radius = data.getInt("radius");
+                            setUpGame();
+                            progD.dismiss();
+                        } catch (JSONException e) { return; }
+                    } else if (response.equals("gameON")) {
+                        gameON = true;
+                    } else if (response.equals("endT")) {
+                        gApiCl.disconnect();
+                        showDialog(true);
+                    } else if (response.equals("endCG")) {
+                        gApiCl.disconnect();
+                        showDialog(false);
+                    } else if (response.equals("removeMarker")) {
+                        String uname;
+                        try {
+                            uname = data.getString("uname");
+                        } catch (JSONException e) { return; }
+                        if (uName.equals(uname)) {
+                            gameON = false;
+                            Snackbar.make(findViewById(R.id.linMap), "Završili ste igru!", Snackbar.LENGTH_INDEFINITE).show();
+                        }
+                        else
+                            markers.get(uname).remove();
                     }
                 }
             });
         }
     };
 
+    private void showDialog(boolean b)
+    {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MapActivity.this);
+        dialog.setTitle("Kraj igre");
+        dialog.setTitle(b ? "Tragači su pobedili" : "Koordinator i zaštitnici su pobedili");
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
+        });
+        dialog.show();
+    }
+
     @Override
     public void onLocationChanged(Location location) {
-        if (mode.equals("game"))
+        if (mode.equals("game") && gameON)
         {
-            float dis = location.distanceTo(gmLoc);
-            if (location.distanceTo(gmLoc) < Constants.area) {
+            /*Location myLoc = new Location("blabla");
+            myLoc.setLatitude(43.31926517);
+            myLoc.setLongitude(21.89886868);*/
+            if (location.distanceTo(gmLoc) < radius) {
                 JSONObject data = new JSONObject();
                 try {
                     data.put("id", userID);
@@ -309,7 +368,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 } catch (JSONException e) { e.printStackTrace(); }
                 LoginActivity.socket.emit("gameOn", data);
             } else {
-                LoginActivity.socket.emit("gameOn", "offarea");
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("id", userID);
+                    data.put("uname", uName);
+                    data.put("gameID", gameID);
+                    data.put("role", role);
+                    data.put("mode", "offarea");
+                } catch (JSONException e) { e.printStackTrace(); }
+                LoginActivity.socket.emit("gameOn", data);
             }
         }
     }
@@ -350,15 +417,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             br.close();
             is.close();
             urlConnection.disconnect();
-        }
-        catch (MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
         return json;
     }
 
@@ -428,6 +487,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         @Override
                         public void run() {
                             gmap.addPolyline(new PolylineOptions().addAll(list).width(12).color(Color.BLUE).geodesic(true));
+                            progD.dismiss();
                         }
                     });
                 }
@@ -457,5 +517,39 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             LocationServices.FusedLocationApi.removeLocationUpdates(gApiCl, this);
             gApiCl.disconnect();
         }*/
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mode.equals("game") && gameON) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(MapActivity.this);
+            dialog.setTitle("Odustati");
+            dialog.setTitle("Odustati od igre?");
+            dialog.setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    JSONObject data = new JSONObject();
+                    try {
+                        data.put("id", userID);
+                        data.put("uname", uName);
+                        data.put("gameID", gameID);
+                        data.put("role", role);
+                        data.put("mode", "offarea");
+                    } catch (JSONException e) { e.printStackTrace(); }
+                    LoginActivity.socket.emit("gameOn", data);
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                }
+            });
+            dialog.setNegativeButton("Ne", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            dialog.show();
+        }
+        else {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
     }
 }

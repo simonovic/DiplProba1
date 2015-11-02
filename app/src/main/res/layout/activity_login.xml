@@ -51,9 +51,10 @@
         android:id="@+id/login"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:onClick="onLoginBtn"
-        android:stateListAnimator="@drawable/my_animator"
-        android:background="@drawable/mybutton" />
+        android:onClick="onLoginBtn" />
+    <!--
+        android:background="@drawable/mybutton"
+        android:stateListAnimator="@drawable/my_animator"-->
 
     <Button
         android:layout_width="match_parent"
@@ -62,8 +63,6 @@
         android:id="@+id/reg"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:onClick="onRegBtn"
-        android:stateListAnimator="@drawable/my_animator"
-        android:background="@drawable/mybutton" />
+        android:onClick="onRegBtn" />
 
 </LinearLayout>
