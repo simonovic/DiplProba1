@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -69,8 +70,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     InputStream is = null;
     String json = "";
     ProgressDialog progD;
-    boolean gameON;
+    boolean gameON, inSafe = false;
     Button roleBtn;
+    SafeZone sz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +90,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         progD.setCanceledOnTouchOutside(false);
         roleBtn = (Button)findViewById(R.id.roleBtn);
         roleBtn.setVisibility(View.GONE);
+        sz = new SafeZone();
 
         extras = getIntent().getExtras();
         mode = extras.getString("mode");
 
-        LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
         if (mode.equals("game"))
         {
+            LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
             if (extras.getString("creator").equals("yes"))
                 waitForCheckIn();
             progD.setMessage("Igra uskoro počinje...");
@@ -108,6 +111,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         SupportMapFragment smapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         smapFrag.getMapAsync(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     private void setUpApiClient()
@@ -145,8 +153,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private void setUpNav()
     {
         chatBtn.setVisibility(View.GONE);
-        double[] pom = extras.getDoubleArray("location");
-        ll = new LatLng(pom[0], pom[1]);
+        ll = new LatLng(GameActivity.game.getLat(), GameActivity.game.getLng());
         gmap.addMarker(new MarkerOptions().position(ll));
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
         setUpApiClient();
@@ -244,7 +251,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                                 markers.put(uname, marker);
                             }
                         }
-
                         Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
                         /*Location myLoc = new Location("blabla");
                         myLoc.setLatitude(43.31926517);
@@ -370,20 +376,35 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         if (role.equals("coordinator")) {
                             Random random = new Random();
                             double diff, w, t, x, y, xx, lat1, lng1;
-                            diff = (radius-GameActivity.game.getSafeRad())/111300;
+                            diff = (double)(radius-GameActivity.game.getSafeRad())/(double)111300;
                             w = diff*Math.sqrt(random.nextDouble());
                             t = 2*Math.PI*random.nextDouble();
                             x = w * Math.cos(t);
                             y = w * Math.sin(t);
                             xx = x / Math.cos(GameActivity.game.getLng());
                             lat1 = GameActivity.game.getLat() + y;
-                            lng1 = GameActivity.game.getLng()+xx;
+                            lng1 = GameActivity.game.getLng() + xx;
                             safeLoc = new Location("safeLoc");
                             safeLoc.setLatitude(lat1);
                             safeLoc.setLongitude(lng1);
                         }
+                    } else if (response.equals("inSafe")) {
+                        String uname;
+                        try {
+                            uname = data.getString("uname");
+                        } catch (JSONException e) { return; }
+                        markers.get(uname).remove();
+                        markers.remove(uname);
+                    } else if (response.equals("outSafe")) {
+                        String uname, lat, lng;
+                        try {
+                            uname = data.getString("uname");
+                            lat = data.getString("lat");
+                            lng = data.getString("lng");
+                        } catch (JSONException e) { return; }
+                        //markers
+                        gmap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(lat), Double.parseDouble(lng))).title(uname).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_coordinator)));
                     }
-
                 }
             });
         }
@@ -418,17 +439,50 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             myLoc.setLatitude(43.31926517);
             myLoc.setLongitude(21.89886868);
             if (location.distanceTo(gmLoc) < radius) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("id", userID);
-                    data.put("uname", uName);
-                    data.put("gameID", gameID);
-                    data.put("lat", location.getLatitude());
-                    data.put("lng", location.getLongitude());
-                    data.put("role", role);
-                    data.put("mode", "location");
-                } catch (JSONException e) { e.printStackTrace(); }
-                LoginActivity.socket.emit("gameOn", data);
+                if (role.equals("coordinator")) {
+                    if (location.distanceTo(safeLoc) < GameActivity.game.getSafeRad()) {
+                        if (!inSafe) {
+                            inSafe = true;
+                            JSONObject data = new JSONObject();
+                            try {
+                                data.put("uname", uName);
+                                data.put("gameID", gameID);
+                                data.put("mode", "in");
+                            } catch (JSONException e) { e.printStackTrace(); }
+                            LoginActivity.socket.emit("inSafeZone", data);
+                            sz.start();
+                        }
+                    }
+                    else {
+                        if (inSafe) {
+                            sz.stop();
+                            inSafe = false;
+                        }
+                        JSONObject data = new JSONObject();
+                        try {
+                            data.put("id", userID);
+                            data.put("uname", uName);
+                            data.put("gameID", gameID);
+                            data.put("lat", location.getLatitude());
+                            data.put("lng", location.getLongitude());
+                            data.put("role", role);
+                            data.put("mode", "location");
+                        } catch (JSONException e) { e.printStackTrace(); }
+                        LoginActivity.socket.emit("gameOn", data);
+                    }
+                } else {
+                    JSONObject data = new JSONObject();
+                    try {
+                        data.put("id", userID);
+                        data.put("uname", uName);
+                        data.put("gameID", gameID);
+                        data.put("lat", location.getLatitude());
+                        data.put("lng", location.getLongitude());
+                        data.put("role", role);
+                        data.put("mode", "location");
+                    } catch (JSONException e) { e.printStackTrace(); }
+                    LoginActivity.socket.emit("gameOn", data);
+                }
             } else {
                 JSONObject data = new JSONObject();
                 try {
@@ -446,6 +500,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private String makeURL()
     {
         Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+        while (myLoc ==  null)
+            myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
         StringBuilder urlString = new StringBuilder();
         urlString.append("https://maps.googleapis.com/maps/api/directions/json");
         urlString.append("?origin=");// from
@@ -453,9 +509,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         urlString.append(",");
         urlString.append(myLoc.getLongitude());
         urlString.append("&destination=");// to
-        urlString.append(ll.latitude);
+        urlString.append(GameActivity.game.getLat());
         urlString.append(",");
-        urlString.append(ll.longitude);
+        urlString.append(GameActivity.game.getLng());
         urlString.append("&sensor=false&mode=driving");
         urlString.append("&key=AIzaSyASJzxaiE-E2A5uRdNSIT-DdhSYbjqsPKc");
         return urlString.toString();
@@ -573,15 +629,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        /*if (mode.equals("game")) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(gApiCl, this);
-            gApiCl.disconnect();
-        }*/
-    }
-
-    @Override
     public void onBackPressed() {
         if (mode.equals("game") && gameON) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(MapActivity.this);
@@ -611,18 +658,56 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             dialog.show();
         }
         else {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        gameON = false;
+        /*gameON = false;
+        role = "";
+        inSafe = false;*/
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    public class SafeZone implements Runnable {
+
+        Thread timerThread;
+
+        public void start() {
+            if (timerThread == null) {
+                timerThread = new Thread(this);
+                timerThread.start();
+            }
+        }
+        public void stop() {
+            if (timerThread != null) {
+                timerThread.interrupt();
+            }
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(GameActivity.game.getSafeTime()*1000);
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("id", userID);
+                    data.put("uname", uName);
+                    data.put("gameID", gameID);
+                    data.put("role", role);
+                    data.put("mode", "offarea");
+                } catch (JSONException e) { e.printStackTrace(); }
+                LoginActivity.socket.emit("gameOn", data);
+            } catch (InterruptedException e) { return; }
+            finally {
+                timerThread = null;
+            }
+        }
     }
 }

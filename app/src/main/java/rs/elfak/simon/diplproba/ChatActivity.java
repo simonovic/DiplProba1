@@ -46,13 +46,12 @@ public class ChatActivity extends AppCompatActivity
         uname = shPref.getString(Constants.userNamepref, "false");
         role = shPref.getString(Constants.rolePref, "");
         listView = (ListView)findViewById(R.id.listView);
-
-        LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
         unameL1 = MapActivity.unameL;
         timeL1 = MapActivity.timeL;
         messageL1 = MapActivity.messageL;
@@ -61,6 +60,12 @@ public class ChatActivity extends AppCompatActivity
         String[] messages = messageL1.toArray(new String[messageL1.size()]);
         clAdap = new ChatListAdapter(getApplicationContext(), unames, times, messages);
         listView.setAdapter(clAdap);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LoginActivity.socket.off("gameOnResponse", onGameOnResponse);
     }
 
     private Emitter.Listener onGameOnResponse = new Emitter.Listener() {

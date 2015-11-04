@@ -40,7 +40,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                                                                 GoogleApiClient.OnConnectionFailedListener
 {
     static Game game;
-    EditText a,b,c,d,e;
+    EditText a,b,c,d,e,safe;
     ArrayList<User> invFrAList, confFrAList;
     List<String> invFrL, confFrL;
     int userID, numConf;
@@ -55,10 +55,21 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
-        setUI();
         setUpApiClient();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setUI();
         getInvConfFr();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LoginActivity.socket.off("getInvConfFrResponse", onGetInvConfFrResponse);
+        LoginActivity.socket.off("delConfGameReqResponse", onDelConfGameReqResponse);
     }
 
     private void setUI()
@@ -82,11 +93,13 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         c = (EditText)findViewById(R.id.c);
         d = (EditText)findViewById(R.id.d);
         e = (EditText)findViewById(R.id.e);
+        safe = (EditText)findViewById(R.id.safe);
         a.setText(game.getName());
         b.setText(game.getCreator());
         c.setText(game.getDt());
         d.setText(game.getAddress());
         e.setText(game.getDesc());
+        safe.setText(game.getSafeRad()+"m, "+game.getSafeTime()+"s");
         btn = (Button)findViewById(R.id.startGameBtn);
         if (Integer.parseInt(game.getCreatorID()) != userID)
             btn.setText(R.string.join);
@@ -138,9 +151,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                         finish();
                     }
                     else if (response.equals("confGame")) {
-                        Toast.makeText(getApplicationContext(), "Dolazak potvrdjen!", Toast.LENGTH_LONG).show();
                         game.addConfID(userID);
-                        confFrL.add((numConf +1)+". "+game.getCreator());
+                        confFrL.add((numConf + 1) + ". " + game.getCreator());
                         menu.findItem(R.id.confirmGame).setVisible(false);
                     }
                     else if (response.equals("onStartGame")) {

@@ -50,6 +50,7 @@
     <string name="safezone">Sigurna zona</string>
     <string name="safeRad">Radijus sigurne zone: 25m</string>
     <string name="safeTime">Dozvoljeno vreme u sigurnoj zoni: 50s</string>
+    <string name="safeH">Radijus i vreme sigurne zone</string>
 
     <string name="invFr">Pozvani prijatelji</string>
     <string name="confFr">Potvrdili dolazak</string>
