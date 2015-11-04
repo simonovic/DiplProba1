@@ -49,8 +49,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
     Menu menu;
     GoogleApiClient gApiCl;
     Button btn;
-
-    public static Game getGame() { return game; }
+    static Location myLoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +93,11 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         invFrL = new ArrayList<String>();
         confFrL = new ArrayList<String>();
 
+        JSONObject data = new JSONObject();
+        try {
+            data.put("gameID", game.get_id());
+        } catch (JSONException e) { e.printStackTrace(); }
+        LoginActivity.socket.emit("findGame", data);
     }
 
     private void setUpApiClient()
@@ -129,8 +133,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                         response = data.getString("response");
                         img = data.getString("img");
                     } catch (JSONException e) { return; }
-                    if (response.equals("delGame"))
-                    {
+                    if (response.equals("delGame")) {
                         LoginActivity.socket.emit("findGames", userID);
                         finish();
                     }
@@ -142,8 +145,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                     }
                     else if (response.equals("onStartGame")) {
                         if (img.equals("ok")) {
-                            //Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
-                            Location myLoc = new Location("blabla");
+                            //myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                            myLoc = new Location("blabla");
                             myLoc.setLatitude(43.31926517);
                             myLoc.setLongitude(21.89886868);
                             Intent i = new Intent(getApplicationContext(), MapActivity.class);
@@ -225,8 +228,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                 else
                 {
                     if (gApiCl.isConnected()) {
-                        //Location myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
-                        Location myLoc = new Location("blabla");
+                        //myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                        myLoc = new Location("blabla");
                         myLoc.setLatitude(43.31926517);
                         myLoc.setLongitude(21.89886868);
                         if (myLoc != null) {

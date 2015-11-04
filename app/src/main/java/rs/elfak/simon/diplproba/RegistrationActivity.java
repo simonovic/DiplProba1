@@ -35,6 +35,7 @@ public class RegistrationActivity extends AppCompatActivity {
     SharedPreferences shPref;
     SharedPreferences.Editor editor;
     ImageView imgView;
+    boolean imgRead = false;
 
     private static Socket socket;
     {
@@ -162,6 +163,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == 1)
         {
             try {
+                imgRead = true;
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
                 Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
@@ -176,6 +178,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
             catch (Exception e)
             {
+                imgRead = false;
                 Snackbar.make(findViewById(R.id.regLL), "Neuspelo učitavanje slike!", Snackbar.LENGTH_LONG).show();
             }
         }
@@ -198,7 +201,11 @@ public class RegistrationActivity extends AppCompatActivity {
         }
         else {
             userName  = un;
-            Bitmap bm = ((BitmapDrawable)imgView.getDrawable()).getBitmap(); //BitmapFactory.decodeResource(getResources(), R.drawable.user);
+            Bitmap bm;
+            if (imgRead)
+                bm = ((BitmapDrawable)imgView.getDrawable()).getBitmap();
+            else
+                bm = BitmapFactory.decodeResource(getResources(), R.drawable.user);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream .toByteArray();

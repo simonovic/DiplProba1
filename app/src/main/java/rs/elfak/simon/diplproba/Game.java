@@ -19,10 +19,12 @@ public class Game
     int[] confirmedUsersID;
     int[] invitedUsersID;
     String dt;
+    int safeRad;
+    int safeTime;
 
     private Game() {}
 
-    public Game(int _id, String name, String desc, String creatorID, String creator, String date, String address, double lat, double lng, int[] confirmedUsersID, int[] invitedUsersID, String dt)
+    public Game(int _id, String name, String desc, String creatorID, String creator, String date, String address, double lat, double lng, int[] confirmedUsersID, int[] invitedUsersID, String dt, int safeRad, int safeTime)
     {
         this._id = _id;
         this.name = name;
@@ -36,6 +38,8 @@ public class Game
         this.confirmedUsersID = confirmedUsersID;
         this.invitedUsersID = invitedUsersID;
         this.dt = dt;
+        this.safeRad = safeRad;
+        this.safeTime = safeTime;
 
     }
 
@@ -115,5 +119,13 @@ public class Game
 
     public void setDt(String dt) {
         this.dt = dt;
+    }
+
+    public int getSafeRad() {
+        return safeRad;
+    }
+
+    public int getSafeTime() {
+        return safeTime;
     }
 }

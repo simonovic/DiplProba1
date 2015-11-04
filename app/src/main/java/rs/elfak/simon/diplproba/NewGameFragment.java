@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,9 +22,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,13 +32,9 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -53,18 +50,16 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
     static int trueCnt = 0;
     static String d, m, y, h, min;
     static boolean first = true;
-    int userID;
+    int userID, safeRad, safeTime;
     LatLng addLatLng;
     static String frList;
 
     public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
             final Calendar c = Calendar.getInstance();
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
-            // Create a new instance of TimePickerDialog and return it
             return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
         }
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -89,12 +84,10 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -191,6 +184,16 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
         }
         numChoosenFr.setText("Broj pozvanih prijatelja: 0");
         userID = ((MainActivity)getActivity()).getUserID();
+
+        Button safeBtn = (Button)v.findViewById(R.id.safeZone);
+        safeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                safeDialog();
+            }
+        });
+        safeRad = 25;
+        safeTime = 50;
         return v;
     }
 
@@ -229,11 +232,58 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                 frList = ((MainActivity)getActivity()).getFrResp();
                 if (!frList.equals(""))
                     newFragment.show(ft, "dialog");
+                else
+                    ((MainActivity)getActivity()).showSnackBar("Nemate prijatelje!");
                 break;
             case R.id.createGame:
                 createGame();
                 break;
         }
+    }
+
+    private void safeDialog()
+    {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog.setTitle("Sigurna zona");
+        View v = getActivity().getLayoutInflater().inflate(R.layout.safe_zone, null);
+        SeekBar barRad = (SeekBar)v.findViewById(R.id.barRad);
+        barRad.setProgress(safeRad-10);
+        barRad.setMax(30);
+        SeekBar barTime = (SeekBar)v.findViewById(R.id.barTime);
+        barTime.setProgress(safeTime-20);
+        barTime.setMax(60);
+        final TextView t1 = (TextView)v.findViewById(R.id.t1);
+        final TextView t2 = (TextView)v.findViewById(R.id.t2);
+        barRad.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                safeRad = progress + 10;
+                t1.setText("Radijus sigurne zone: "+safeRad+"m");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        barTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                safeTime = progress + 20;
+                t2.setText("Dozvoljeno vreme u sigurnoj zoni: "+safeTime+"s");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        dialog.setView(v);
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialog.show();
     }
 
     private void createGame()
@@ -245,9 +295,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
         det = date.getText().toString();
         tet = time.getText().toString();
         if (net.equals("") || tet.equals("") || det.equals("") || cet.equals("") || aet.equals("")) {
-            Toast.makeText(getActivity().getApplicationContext(), "Morate popuniti sva polja!", Toast.LENGTH_SHORT).show();
+            ((MainActivity)getActivity()).showSnackBar("Morate popuniti sva polja!");
         } else if (trueCnt < 2) {
-            Toast.makeText(getActivity().getApplicationContext(), "Potrebna su minimum dva prijatelja!", Toast.LENGTH_SHORT).show();
+            ((MainActivity)getActivity()).showSnackBar("Potrebna su minimum dva prijatelja!");
         } else {
             JSONArray jsonarray = new JSONArray();
             for (int i = 0; i < friends.size(); i++) {
@@ -265,6 +315,8 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
                 data.put("lat", addLatLng.latitude);
                 data.put("lng", addLatLng.longitude);
                 data.put("invFrID", jsonarray);
+                data.put("safeRad", safeRad);
+                data.put("safeTime", safeTime);
             } catch (JSONException e) { e.printStackTrace(); }
             first = true;
             trueCnt = 0;

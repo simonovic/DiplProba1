@@ -2,6 +2,7 @@ package rs.elfak.simon.diplproba;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         games = response;
                         MainFragment mf = (MainFragment) fm.findFragmentById(R.id.flContent);
-                        mf.listGames();
+                        if (mf != null) mf.listGames();
                     }
                     else
                     {
@@ -294,8 +295,10 @@ public class MainActivity extends AppCompatActivity
                         if (!frReqSentStr.equals("")) {
                             searchItem.setVisible(false);
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
-                            fr.getBtn().setText("Završi");
-                            fr.listFriends();
+                            if (fr != null) {
+                                fr.getBtn().setText("Završi");
+                                fr.listFriends();
+                            }
                         }
                     }
                 }
@@ -324,7 +327,7 @@ public class MainActivity extends AppCompatActivity
                         frResp = response;
                         imgResp = img;
                         FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
-                        fr.listFriends();
+                        if (fr != null) fr.listFriends();
                     }
                 }
             });
@@ -355,7 +358,7 @@ public class MainActivity extends AppCompatActivity
                             FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
                             if (fr.getSrlFr().isRefreshing())
                                 fr.getSrlFr().setRefreshing(false);
-                            fr.listFriends();
+                            if (fr != null) fr.listFriends();
                             update = false;
                         }
                     } else {
@@ -431,7 +434,13 @@ public class MainActivity extends AppCompatActivity
                 backPress = false;
                 editor.putString(Constants.userNamepref, "false");
                 editor.commit();
-                finish();
+                startActivity(new Intent(this, LoginActivity.class));
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("_id", userID);
+                    data.put("mode", "logout");
+                } catch (JSONException e) { e.printStackTrace(); }
+                LoginActivity.socket.emit("loginRequest", data);
                 break;
         }
         try {
@@ -531,6 +540,11 @@ public class MainActivity extends AppCompatActivity
                 builder.show();
     }
 
+    public void showSnackBar(String str)
+    {
+        Snackbar.make(findViewById(R.id.mainLL), str, Snackbar.LENGTH_LONG).show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -561,8 +575,10 @@ public class MainActivity extends AppCompatActivity
                     frResp = frResp1;
                     imgResp = imgResp1;
                     FriendsFragment fr = (FriendsFragment) fm.findFragmentById(R.id.flContent);
-                    fr.getBtn().setVisibility(View.VISIBLE);
-                    fr.listFriends();
+                    if (fr != null) {
+                        fr.getBtn().setVisibility(View.VISIBLE);
+                        fr.listFriends();
+                    }
                 }
                 return true;
             }

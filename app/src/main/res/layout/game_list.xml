@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/cv"
         game_list:cardCornerRadius="6dp"
+        android:background="#FFEFDB"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:layout_margin="4dp">

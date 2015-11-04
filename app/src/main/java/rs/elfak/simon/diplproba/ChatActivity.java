@@ -3,7 +3,9 @@ package rs.elfak.simon.diplproba;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -119,5 +121,12 @@ public class ChatActivity extends AppCompatActivity
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //NavUtils.navigateUpFromSameTask(this);
+        //return true;
+        return super.onOptionsItemSelected(item);
     }
 }

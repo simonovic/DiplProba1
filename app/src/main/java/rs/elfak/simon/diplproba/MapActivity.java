@@ -100,7 +100,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 waitForCheckIn();
             progD.setMessage("Igra uskoro počinje...");
             progD.show();
-            game = GameActivity.getGame();
+            game = GameActivity.game;
         }
         else if (mode.equals("nav"))
         {

@@ -114,6 +114,7 @@ public class LoginActivity extends Activity
             try {
                 data.put("uname", n);
                 data.put("upass", p);
+                data.put("mode", "login");
             } catch (JSONException e) { e.printStackTrace(); }
             socket.emit("loginRequest", data);
         }
