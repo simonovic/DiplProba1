@@ -45,6 +45,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
@@ -60,7 +61,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     FloatingActionButton chatBtn;
     GoogleApiClient gApiCl;
     int userID, gameID, radius;
-    Location gmLoc;
+    Location gmLoc, safeLoc;
     static final LocationRequest locRequest = LocationRequest.create()
             .setInterval(3000).setFastestInterval(3000).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     SharedPreferences shPref;
@@ -69,7 +70,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     String json = "";
     ProgressDialog progD;
     boolean gameON;
-    Game game;
     Button roleBtn;
 
     @Override
@@ -95,12 +95,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
         if (mode.equals("game"))
         {
-            //gameID = extras.getInt("gameID");
             if (extras.getString("creator").equals("yes"))
                 waitForCheckIn();
             progD.setMessage("Igra uskoro počinje...");
             progD.show();
-            game = GameActivity.game;
         }
         else if (mode.equals("nav"))
         {
@@ -132,12 +130,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             }
         });
         gameID = extras.getInt("gameID");
-        double[] pom = extras.getDoubleArray("location");
-        ll = new LatLng(pom[0], pom[1]);
-        pom = extras.getDoubleArray("glocation");
+        ll = new LatLng(GameActivity.game.getLat(), GameActivity.game.getLng());
         gmLoc = new Location("gmrLoc");
-        gmLoc.setLatitude(pom[0]);
-        gmLoc.setLongitude(pom[1]);
+        gmLoc.setLatitude(GameActivity.game.getLat());
+        gmLoc.setLongitude(GameActivity.game.getLng());
         gmap.addCircle(new CircleOptions().center(ll).radius(radius).strokeWidth(5).strokeColor(Color.BLUE)/*.fillColor(R.color.area)*/);
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
         unameL = new ArrayList<String>();
@@ -154,7 +150,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         gmap.addMarker(new MarkerOptions().position(ll));
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
         setUpApiClient();
-        //gApiCl.connect();
     }
 
     public void setUpNewGame()
@@ -193,8 +188,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             setUpNav();
         else if (mode.equals("newGame"))
             setUpNewGame();
-        //else if (mode.equals("game"))
-            //setUpGame();
     }
 
     @Override
@@ -317,7 +310,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             data2.put("id", userID);
                             data2.put("mode", "a");
                         } catch (JSONException e) { return; }
-                        if (userID == Integer.parseInt(game.getCreatorID()))
+                        if (userID == Integer.parseInt(GameActivity.game.getCreatorID()))
                             LoginActivity.socket.emit("roleInit", data2);
                         roleBtn.setVisibility(View.VISIBLE);
                         new CountDownTimer(time, 1000) {
@@ -332,8 +325,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             }
                             @Override
                             public void onFinish() {
-                                if (role.equals("coordinator"))
+                                if (role.equals("coordinator")) {
                                     roleBtn.setText("KOORDINATOR");
+                                    LatLng safe = new LatLng(safeLoc.getLatitude(), safeLoc.getLongitude());
+                                    gmap.addCircle(new CircleOptions().center(safe).radius(GameActivity.game.getSafeRad()).strokeWidth(3).strokeColor(Color.RED)/*.fillColor(R.color.area)*/);
+                                }
                                 else if (role.equals("guardian"))
                                     roleBtn.setText("ZAŠTITNIK");
                                 else
@@ -371,6 +367,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         LoginActivity.socket.emit("roleInit", data3);
                         editor.putString(Constants.rolePref, role);
                         editor.commit();
+                        if (role.equals("coordinator")) {
+                            Random random = new Random();
+                            double diff, w, t, x, y, xx, lat1, lng1;
+                            diff = (radius-GameActivity.game.getSafeRad())/111300;
+                            w = diff*Math.sqrt(random.nextDouble());
+                            t = 2*Math.PI*random.nextDouble();
+                            x = w * Math.cos(t);
+                            y = w * Math.sin(t);
+                            xx = x / Math.cos(GameActivity.game.getLng());
+                            lat1 = GameActivity.game.getLat() + y;
+                            lng1 = GameActivity.game.getLng()+xx;
+                            safeLoc = new Location("safeLoc");
+                            safeLoc.setLatitude(lat1);
+                            safeLoc.setLongitude(lng1);
+                        }
                     }
 
                 }
@@ -602,5 +613,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         else {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        gameON = false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }
