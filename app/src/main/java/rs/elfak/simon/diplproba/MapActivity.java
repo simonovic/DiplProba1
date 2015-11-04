@@ -134,6 +134,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         chatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LoginActivity.socket.off("");
                 startActivity(new Intent(getApplicationContext(), ChatActivity.class));
             }
         });
@@ -148,6 +149,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         timeL = new ArrayList<String>();
         messageL = new ArrayList<String>();
         markers = new HashMap<>();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LoginActivity.socket.on("chat", chatListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LoginActivity.socket.off("chat", chatListener);
     }
 
     private void setUpNav()
@@ -204,6 +217,27 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         setResult(Activity.RESULT_OK, retInt);
         finish();
     }
+
+    private Emitter.Listener chatListener = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String uname, time, mess;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        uname = data.getString("uname");
+                        time = data.getString("time");
+                        mess = data.getString("message");
+                    } catch (JSONException e) { return; }
+                    unameL.add(uname);
+                    timeL.add(time);
+                    messageL.add(mess);
+                }
+            });
+        }
+    };
 
     private Emitter.Listener onGameOnResponse = new Emitter.Listener() {
         @Override
@@ -290,17 +324,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             }
                             LoginActivity.socket.emit("gameOn", data1);
                         }
-                    } else if (response.equals("chat")) {
-                        String uname, time, mess;
-                        try {
-                            uname = data.getString("uname");
-                            time = data.getString("time");
-                            mess = data.getString("message");
-                        } catch (JSONException e) { return; }
-                        Toast.makeText(getApplicationContext(), uname + ", " + time + ", " + mess, Toast.LENGTH_LONG).show();
-                        unameL.add(uname);
-                        timeL.add(time);
-                        messageL.add(mess);
                     } else if (response.equals("nep")) {
                         progD.dismiss();
                         Snackbar.make(findViewById(R.id.linMap), "Nedovoljan broj igrača!", Snackbar.LENGTH_INDEFINITE).show();
@@ -660,19 +683,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         else {
             finish();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        /*gameON = false;
-        role = "";
-        inSafe = false;*/
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     public class SafeZone implements Runnable {

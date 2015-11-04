@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 
@@ -51,7 +52,6 @@ public class ChatActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
         unameL1 = MapActivity.unameL;
         timeL1 = MapActivity.timeL;
         messageL1 = MapActivity.messageL;
@@ -60,41 +60,39 @@ public class ChatActivity extends AppCompatActivity
         String[] messages = messageL1.toArray(new String[messageL1.size()]);
         clAdap = new ChatListAdapter(getApplicationContext(), unames, times, messages);
         listView.setAdapter(clAdap);
+        LoginActivity.socket.on("chat", chatListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LoginActivity.socket.off("gameOnResponse", onGameOnResponse);
+        LoginActivity.socket.off("chat", chatListener);
+        MapActivity.unameL = unameL1;
+        MapActivity.timeL = timeL1;
+        MapActivity.messageL = messageL1;
     }
 
-    private Emitter.Listener onGameOnResponse = new Emitter.Listener() {
+    private Emitter.Listener chatListener = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String response;
+                    String uname, time, mess;
                     JSONObject data = (JSONObject) args[0];
                     try {
-                        response = data.getString("response");
+                        uname = data.getString("uname");
+                        time = data.getString("time");
+                        mess = data.getString("message");
                     } catch (JSONException e) { return; }
-                    if (response.equals("chat")) {
-                        String uname, time, mess;
-                        try {
-                            uname = data.getString("uname");
-                            time = data.getString("time");
-                            mess = data.getString("message");
-                        } catch (JSONException e) { return; }
-                        unameL1.add(uname);
-                        timeL1.add(time);
-                        messageL1.add(mess);
-                        String[] unames = unameL1.toArray(new String[unameL1.size()]);
-                        String[] times = timeL1.toArray(new String[timeL1.size()]);
-                        String[] messages = messageL1.toArray(new String[messageL1.size()]);
-                        clAdap = new ChatListAdapter(getApplicationContext(), unames, times, messages);
-                        listView.setAdapter(clAdap);
-                    }
+                    unameL1.add(uname);
+                    timeL1.add(time);
+                    messageL1.add(mess);
+                    String[] unames = unameL1.toArray(new String[unameL1.size()]);
+                    String[] times = timeL1.toArray(new String[timeL1.size()]);
+                    String[] messages = messageL1.toArray(new String[messageL1.size()]);
+                    clAdap = new ChatListAdapter(getApplicationContext(), unames, times, messages);
+                    listView.setAdapter(clAdap);
                 }
             });
         }
