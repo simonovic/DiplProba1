@@ -598,14 +598,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
@@ -622,10 +620,6 @@ public class MainActivity extends AppCompatActivity
             mDrawer.closeDrawer(Gravity.LEFT);
             return;
         }
-        /*if (backPress)
-            moveTaskToBack(true); // ili finish();
-        else
-            super.onBackPressed();*/
         moveTaskToBack(true);
     }
 }
