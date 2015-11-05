@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -53,6 +54,8 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
     int userID, safeRad, safeTime;
     LatLng addLatLng;
     static String frList;
+    SharedPreferences shPref;
+    SharedPreferences.Editor editor;
 
     public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
         @Override
@@ -173,6 +176,10 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), MapActivity.class);
+                shPref = getActivity().getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
+                editor = shPref.edit();
+                editor.putString(Constants.modePref, "newGame");
+                editor.commit();
                 i.putExtra("mode", "newGame");
                 startActivityForResult(i, 100);
             }

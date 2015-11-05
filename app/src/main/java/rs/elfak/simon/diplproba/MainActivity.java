@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         editor = shPref.edit();
         userID = shPref.getInt(Constants.userIDpref, 0);
         uName = shPref.getString(Constants.userNamepref, "");
-        fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance())/*.addToBackStack(null)*/.commit();
+        fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance()).addToBackStack(null).commit();
         nvDrawer.getMenu().getItem(0).setChecked(true);
         TextView tv = (TextView)findViewById(R.id.unametv);
         tv.setText(uName);

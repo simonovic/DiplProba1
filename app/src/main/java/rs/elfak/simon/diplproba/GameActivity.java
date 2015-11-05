@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -164,6 +163,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                             Intent i = new Intent(getApplicationContext(), MapActivity.class);
                             double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
                             double[] gpom = {game.getLat(), game.getLng()};
+                            editor.putString(Constants.modePref, "game");
+                            editor.commit();
                             i.putExtra("location", pom);
                             i.putExtra("glocation", gpom);
                             i.putExtra("gameID", game.get_id());
@@ -265,6 +266,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                                     Intent i = new Intent(this, MapActivity.class);
                                     double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
                                     double[] gpom = {game.getLat(), game.getLng()};
+                                    editor.putString(Constants.modePref,"game");
+                                    editor.commit();
                                     i.putExtra("location", pom);
                                     i.putExtra("glocation", gpom);
                                     i.putExtra("gameID", game.get_id());
@@ -414,6 +417,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         {
             Intent i = new Intent(this, MapActivity.class);
             double[] pom = {game.getLat(), game.getLng()};
+            editor.putString(Constants.modePref, "nav");
+            editor.commit();
             i.putExtra("location", pom);
             i.putExtra("mode", "nav");
             startActivity(i);

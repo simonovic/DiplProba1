@@ -128,8 +128,6 @@ public class ChatActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //NavUtils.navigateUpFromSameTask(this);
-        //return true;
         return super.onOptionsItemSelected(item);
     }
 }

@@ -92,13 +92,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         roleBtn.setVisibility(View.GONE);
         sz = new SafeZone();
 
-        extras = getIntent().getExtras();
-        mode = extras.getString("mode");
+        //extras = getIntent().getExtras();
+        mode = shPref.getString(Constants.modePref, "");
 
         if (mode.equals("game"))
         {
             LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
-            if (extras.getString("creator").equals("yes"))
+            if (userID == Integer.parseInt(GameActivity.game.getCreatorID()))
                 waitForCheckIn();
             progD.setMessage("Igra uskoro počinje...");
             progD.show();
@@ -116,6 +116,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
+        outState.putString("mode", "game");
     }
 
     private void setUpApiClient()
@@ -138,7 +139,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 startActivity(new Intent(getApplicationContext(), ChatActivity.class));
             }
         });
-        gameID = extras.getInt("gameID");
+        gameID = GameActivity.game.get_id();
         ll = new LatLng(GameActivity.game.getLat(), GameActivity.game.getLng());
         gmLoc = new Location("gmrLoc");
         gmLoc.setLatitude(GameActivity.game.getLat());
