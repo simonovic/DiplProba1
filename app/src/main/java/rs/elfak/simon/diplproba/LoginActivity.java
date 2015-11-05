@@ -92,7 +92,6 @@ public class LoginActivity extends Activity
     protected void onDestroy() {
         super.onDestroy();
         socket.off("loginResponse", onLoginResponse);
-        //socket.disconnect();
     }
 
     public void onLoginBtn(View v)

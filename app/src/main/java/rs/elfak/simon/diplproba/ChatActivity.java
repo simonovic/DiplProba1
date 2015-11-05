@@ -43,8 +43,8 @@ public class ChatActivity extends AppCompatActivity
         messageL1 = new ArrayList<String>();
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         userID = shPref.getInt(Constants.userIDpref, 0);
-        gameID = shPref.getInt(Constants.gameIDpref, 0);
         uname = shPref.getString(Constants.userNamepref, "false");
+        gameID = shPref.getInt(Constants.gameIDpref, 0);
         role = shPref.getString(Constants.rolePref, "");
         listView = (ListView)findViewById(R.id.listView);
     }

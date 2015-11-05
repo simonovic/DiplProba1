@@ -91,7 +91,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         roleBtn = (Button)findViewById(R.id.roleBtn);
         roleBtn.setVisibility(View.GONE);
         sz = new SafeZone();
-
         //extras = getIntent().getExtras();
         mode = shPref.getString(Constants.modePref, "");
 

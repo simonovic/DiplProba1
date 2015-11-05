@@ -24,16 +24,6 @@ public class User
         this.frReqRecv = frReqRecv;
     }
 
-    /*@Override
-    public String toString() {
-        String s = null;
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.serializeNulls();
-        Gson gson = gsonBuilder.create();
-        s = gson.toJson(this);
-        return s;
-    }*/
-
     public int get_id() {
         return _id;
     }

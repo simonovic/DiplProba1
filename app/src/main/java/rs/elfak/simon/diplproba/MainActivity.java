@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         fm.beginTransaction().replace(R.id.flContent, MainFragment.newInstance()).addToBackStack(null).commit();
         nvDrawer.getMenu().getItem(0).setChecked(true);
         TextView tv = (TextView)findViewById(R.id.unametv);
-        tv.setText(uName);
+        //tv.setText(uName);
     }
 
     public void setUpSocketIO()

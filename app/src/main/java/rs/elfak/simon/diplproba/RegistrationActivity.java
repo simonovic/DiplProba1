@@ -192,7 +192,6 @@ public class RegistrationActivity extends AppCompatActivity {
         em = email.getText().toString();
         un = uname.getText().toString();
         up = upass.getText().toString();
-
         if (fn.isEmpty() || ln.isEmpty() || em.isEmpty() || un.isEmpty() || up.isEmpty()) {
             Snackbar.make(findViewById(R.id.regLL), "Popunite sva polja!", Snackbar.LENGTH_LONG).show();
         }

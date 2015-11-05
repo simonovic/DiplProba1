@@ -36,8 +36,8 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameAdapterHol
             cv = (CardView)itemView.findViewById(R.id.cv);
             nameTV = (TextView)itemView.findViewById(R.id.nameTV);
             creatorTV = (TextView)itemView.findViewById(R.id.creatorTV);
-            dateTV = (TextView)itemView.findViewById(R.id.dataTV);
             addressTV = (TextView)itemView.findViewById(R.id.addressTV);
+            dateTV = (TextView)itemView.findViewById(R.id.dataTV);
         }
     }
 

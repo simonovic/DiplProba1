@@ -34,8 +34,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener
     ListView friendsList;
     View v;
     SwipeRefreshLayout srlFr;
-    Button btn;
     int userID;
+    Button btn;
 
     public SwipeRefreshLayout getSrlFr() { return srlFr; }
     public ArrayList<User> getFriends() {

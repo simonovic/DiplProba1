@@ -18,19 +18,6 @@ import com.github.nkzawa.emitter.Emitter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-////////////////////////////////////////////////////////////////////////////
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import ws.wamp.jawampa.*;
-import ws.wamp.jawampa.connection.IWampConnectorProvider;
-import ws.wamp.jawampa.transport.netty.NettyWampClientConnectorProvider;
-
 public class ProfileActivity extends Activity
 {
     int id;

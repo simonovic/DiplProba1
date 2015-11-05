@@ -26,6 +26,8 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -232,6 +234,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             case R.id.dateBtn:
                 DialogFragment dateDialog = new DatePickerFragment();
                 dateDialog.show(getActivity().getSupportFragmentManager(), "datePicker");
+                break;
+            case R.id.addBtn:
+                Toast.makeText(getActivity().getApplicationContext(),"Nadji adresu", Toast.LENGTH_LONG).show();
                 break;
             case R.id.chUser:
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();

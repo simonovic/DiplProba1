@@ -40,7 +40,6 @@ public class Game
         this.dt = dt;
         this.safeRad = safeRad;
         this.safeTime = safeTime;
-
     }
 
     public void addConfID(int id)

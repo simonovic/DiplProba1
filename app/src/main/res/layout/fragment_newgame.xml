@@ -18,7 +18,8 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/nameTIL"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,7 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="20">
+            android:weightSum="20"
+            android:layout_marginBottom="5dp">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_weight="15"
@@ -60,8 +62,7 @@
                 android:id="@+id/timeBtn"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="4dp"
-                android:layout_weight="5.60"
-                android:layout_marginRight="10dp"
+                android:layout_weight="5"
                 android:background="@drawable/mybutton"
                 android:stateListAnimator="@drawable/my_animator"
                 android:textColor="#FFFFFF"/>
@@ -71,7 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="20">
+            android:weightSum="20"
+            android:layout_marginBottom="5dp">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_weight="15"
@@ -97,40 +99,60 @@
                 android:id="@+id/dateBtn"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="4dp"
-                android:layout_weight="5.60"
-                android:layout_marginRight="10dp"
+                android:layout_weight="5"
                 android:background="@drawable/mybutton"
                 android:stateListAnimator="@drawable/my_animator"
                 android:textColor="#FFFFFF"/>
-
         </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/addressTIL"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="20"
+            android:layout_marginBottom="5dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/addressTIL"
+                android:layout_weight="15"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/address"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:hint="@string/add"
-                android:background="@drawable/myedittext"
-                android:padding="7dp"
-                android:focusableInTouchMode="false"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginBottom="5dp">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/address"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/add"
+                    android:background="@drawable/myedittext"
+                    android:padding="7dp"
+                    android:focusableInTouchMode="false"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="37dp"
+                android:text="@string/choose"
+                android:id="@+id/addBtn"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="5"
+                android:background="@drawable/mybutton"
+                android:stateListAnimator="@drawable/my_animator"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/comTIL"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/com"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
                 android:hint="@string/com1"
                 android:background="@drawable/myedittext"
                 android:padding="7dp" />
@@ -139,7 +161,8 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/numFrTIL"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -160,14 +183,15 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/mybutton"
             android:stateListAnimator="@drawable/my_animator"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="5dp" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/safezone"
             android:id="@+id/safeZone"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/mybutton"
             android:stateListAnimator="@drawable/my_animator"
             android:textColor="#FFFFFF"/>
@@ -177,7 +201,7 @@
             android:layout_height="wrap_content"
             android:text="@string/createGame"
             android:id="@+id/createGame"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="17dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/mybutton"
             android:stateListAnimator="@drawable/my_animator"

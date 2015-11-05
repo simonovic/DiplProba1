@@ -21,6 +21,7 @@ public class GameRulesFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         v = inflater.inflate(R.layout.fragment_rules, container, false);
         return v;
     }

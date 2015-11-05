@@ -44,13 +44,14 @@
     <string name="start">Započni igru</string>
     <string name="rules">"   Ukoliko želite da učestvujete u nekoj od predstojećih igara, potrebno je pojaviti se na vreme i mestu koji su navedeni u samoj igri. Kreator igre započinje igru, i u narednih 10-ak sekundi ostali igrači pristupaju.
    Igrači imaju na raspolaganju određeno vreme da se rasporede u regionu, koji je prikazan na mapi. Nakon toga igra počinje, i svi igrači su dobili svoje uloge.
-   Osnovno pravilo je da niko ne sme da izađe van regiona igre, u suprotnom, biva izbačen. 'Tragači' za zadatak imaju da uhvate 'Koordinatora', a da pritom ne budu uhvaćeni od strane 'Zaštitnika'. 'Koordinator' navodi 'Zaštitnike' slanjem poruka, uz ograničenje da mu se nijedan 'Zaštitnik' ne sme naći u blizini od 30-ak metara.
+   Osnovno pravilo je da niko ne sme da izađe van regiona igre, u suprotnom, biva izbačen. 'Tragači' za zadatak imaju da uhvate 'Koordinatora', a da pritom ne budu uhvaćeni od strane 'Zaštitnika'. 'Koordinator' navodi 'Zaštitnike' slanjem poruka, uz ograničenje da mu se nijedan 'Zaštitnik' ne sme naći u blizini od 30-ak metara, inače se igra zavšava u korist 'Tragača'..
+
    'Zaštitnici' i 'Koordinator' pobedjuju ukoliko uhvate sve 'Tragače', dok 'Tragači' pobeđuju ako uhvate 'Koordinatora', ili ukoliko u igri ne ostane nijedan 'Zaštitnik'."</string>
     <string name="ruless">Pravila igre</string>
     <string name="safezone">Sigurna zona</string>
     <string name="safeRad">Radijus sigurne zone: 25m</string>
     <string name="safeTime">Dozvoljeno vreme u sigurnoj zoni: 50s</string>
-    <string name="safeH">Radijus i vreme sigurne zone</string>
+    <string name="safeH">Radijus i vreme sigurne zone:</string>
 
     <string name="invFr">Pozvani prijatelji</string>
     <string name="confFr">Potvrdili dolazak</string>

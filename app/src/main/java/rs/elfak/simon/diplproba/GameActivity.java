@@ -91,13 +91,13 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         b = (EditText)findViewById(R.id.b);
         c = (EditText)findViewById(R.id.c);
         d = (EditText)findViewById(R.id.d);
-        e = (EditText)findViewById(R.id.e);
+        //e = (EditText)findViewById(R.id.e);
         safe = (EditText)findViewById(R.id.safe);
         a.setText(game.getName());
         b.setText(game.getCreator());
         c.setText(game.getDt());
         d.setText(game.getAddress());
-        e.setText(game.getDesc());
+        //e.setText(game.getDesc());
         safe.setText(game.getSafeRad()+"m, "+game.getSafeTime()+"s");
         btn = (Button)findViewById(R.id.startGameBtn);
         if (Integer.parseInt(game.getCreatorID()) != userID)

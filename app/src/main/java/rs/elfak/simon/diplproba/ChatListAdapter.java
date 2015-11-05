@@ -35,6 +35,7 @@ public class ChatListAdapter extends ArrayAdapter<String>
         unameTV.setText(uname[position]);
         timeTV.setText(time[position]);
         messTV.setText(message[position]);
+
         return rowView;
     }
 }
