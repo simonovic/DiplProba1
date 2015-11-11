@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/nis2"
+                android:src="@drawable/nis1"
                 app:layout_collapseMode="parallax"/>
 
             <android.support.v7.widget.Toolbar
@@ -43,7 +43,9 @@
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent"
-           android:orientation="vertical" >
+           android:orientation="vertical"
+           android:paddingLeft="4dp"
+           android:paddingRight="4dp">
 
            <TextView
                android:layout_width="wrap_content"
@@ -65,7 +67,8 @@
                android:layout_marginBottom="2dp"
                android:layout_marginLeft="12dp"
                android:layout_marginRight="12dp"
-               android:paddingLeft="12dp" />
+               android:paddingLeft="12dp"
+               android:text="a" />
 
            <TextView
                android:layout_width="wrap_content"

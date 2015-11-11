@@ -11,13 +11,35 @@
     android:id="@+id/logLL"
     android:background="#FFD180">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Run &apos;n"
+        android:id="@+id/a1"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#8A2C30"
+        android:textSize="91dp"
+        android:layout_marginTop="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Hide"
+        android:id="@+id/a2"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#8A2C30"
+        android:textSize="91dp"
+        android:layout_marginTop="-15dp" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/nameTIL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="250dp">
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="40dp">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,8 +54,8 @@
         android:id="@+id/passTIL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
         android:layout_marginTop="5dp">
         <EditText
             android:layout_width="match_parent"
@@ -54,13 +76,13 @@
         android:text="@string/login"
         android:id="@+id/login"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="17dp"
         android:onClick="onLoginBtn"
         android:background="@drawable/mybutton"
         android:stateListAnimator="@drawable/my_animator"
         android:textColor="#FFFFFF"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp" />
 
     <Button
         android:layout_width="match_parent"
@@ -72,8 +94,8 @@
         android:background="@drawable/mybutton"
         android:stateListAnimator="@drawable/my_animator"
         android:textColor="#FFFFFF"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
         android:layout_marginTop="10dp" />
 
 </LinearLayout>

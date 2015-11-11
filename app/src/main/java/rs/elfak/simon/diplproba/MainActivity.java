@@ -205,10 +205,8 @@ public class MainActivity extends AppCompatActivity
                     } catch (JSONException e) { return; }
 
                     if (fORu.equals("f")) {
-                        //Snackbar.make(findViewById(R.id.mainLL), "f", Snackbar.LENGTH_LONG).show();
                         imgResp = imgResp1 = response;
                     } else {
-                        //Snackbar.make(findViewById(R.id.mainLL), "u", Snackbar.LENGTH_LONG).show();
                         imgResp = response;
                     }
                 }
@@ -463,7 +461,7 @@ public class MainActivity extends AppCompatActivity
             if (friends.contains(ID+"")) {
                 msg = "Ukloniti korisnika '" + user + "' iz prijatelja?";
                 mode = true;
-            } else {  // dadati proveru da li vec poslat zahtev
+            } else {
                 msg = "Poslati zahtev korisniku '" + user + "'?";
                 mode = false;
             }
@@ -472,7 +470,7 @@ public class MainActivity extends AppCompatActivity
         {
             msg = "Prihvatiti '" + user + "' za prijatelja?";
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle("Prijateljstvo").setMessage(msg)
                 .setPositiveButton("Da", new DialogInterface.OnClickListener() {
                     @Override

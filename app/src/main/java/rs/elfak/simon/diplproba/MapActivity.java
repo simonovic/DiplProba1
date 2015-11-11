@@ -17,7 +17,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -79,16 +78,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        chatBtn = (FloatingActionButton)findViewById(R.id.chatBtn);
+        chatBtn.setVisibility(View.GONE);
+        roleBtn = (Button)findViewById(R.id.roleBtn);
+        //roleBtn.setText("TRAGAČ");
         shPref = getSharedPreferences(Constants.loginPref, Context.MODE_PRIVATE);
         editor = shPref.edit();
         userID = shPref.getInt(Constants.userIDpref, 0);
         gameID = shPref.getInt(Constants.gameIDpref, 0);
         uName = shPref.getString(Constants.userNamepref, "false");
         gameON = false;
-        chatBtn = (FloatingActionButton)findViewById(R.id.chatBtn);
         progD = new ProgressDialog(this);
         progD.setCanceledOnTouchOutside(false);
-        roleBtn = (Button)findViewById(R.id.roleBtn);
         roleBtn.setVisibility(View.GONE);
         sz = new SafeZone();
         //extras = getIntent().getExtras();
@@ -99,6 +100,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             LoginActivity.socket.on("gameOnResponse", onGameOnResponse);
             if (userID == Integer.parseInt(GameActivity.game.getCreatorID()))
                 waitForCheckIn();
+            chatBtn.setVisibility(View.GONE);
             progD.setMessage("Igra uskoro počinje...");
             progD.show();
         }
@@ -208,6 +210,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             setUpNav();
         else if (mode.equals("newGame"))
             setUpNewGame();
+
+        //testiranje
+        //gmap.addMarker(new MarkerOptions().position(new LatLng(43.327575, 21.895733)).title("Markez").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_coordinator)));
+        //gmap.addMarker(new MarkerOptions().position(new LatLng(43.323580, 21.895276)).title("Little Indian").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_guardian)));
+        //gmap.addMarker(new MarkerOptions().position(new LatLng(43.326578, 21.897974)).title("Dragon").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_guardian)));
+        //gmap.addMarker(new MarkerOptions().position(new LatLng(43.325553, 21.892741)).title("2Fast4U").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_tracker)));
+        //gmap.addMarker(new MarkerOptions().position(new LatLng(43.324744, 21.897480)).title("Lazione").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_tracker)));
+        //gmap.addCircle(new CircleOptions().center(new LatLng(43.325960, 21.895715)).radius(300).strokeWidth(5).strokeColor(Color.BLUE));
+        //gmap.addCircle(new CircleOptions().center(new LatLng(43.326368, 21.894576)).radius(35).strokeWidth(3).strokeColor(Color.RED).fillColor(R.color.area));
+        //.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.325960, 21.895715), 16));
+        //showDialog(false);
     }
 
     @Override
@@ -357,12 +370,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                                 if (role.equals("coordinator")) {
                                     roleBtn.setText("KOORDINATOR");
                                     LatLng safe = new LatLng(safeLoc.getLatitude(), safeLoc.getLongitude());
-                                    gmap.addCircle(new CircleOptions().center(safe).radius(GameActivity.game.getSafeRad()).strokeWidth(3).strokeColor(Color.RED)/*.fillColor(R.color.area)*/);
+                                    gmap.addCircle(new CircleOptions().center(safe).radius(GameActivity.game.getSafeRad()).strokeWidth(3).strokeColor(Color.RED).fillColor(R.color.area));
                                 }
                                 else if (role.equals("guardian"))
                                     roleBtn.setText("ZAŠTITNIK");
                                 else
                                     roleBtn.setText("TRAGAČ");
+                                chatBtn.setVisibility(View.VISIBLE);
                             }
                         }.start();
                     } else if (response.equals("gameON")) {
@@ -435,7 +449,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     private void showDialog(boolean b)
     {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(MapActivity.this);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MapActivity.this, R.style.DialogTheme);
         dialog.setTitle("Kraj igre");
         dialog.setTitle(b ? "Tragači su pobedili" : "Koordinator i zaštitnici su pobedili");
         dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -535,7 +549,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         urlString.append(GameActivity.game.getLat());
         urlString.append(",");
         urlString.append(GameActivity.game.getLng());
-        urlString.append("&sensor=false&mode=driving");
+        urlString.append("&sensor=false&mode=walking"); //driving
         urlString.append("&key=AIzaSyASJzxaiE-E2A5uRdNSIT-DdhSYbjqsPKc");
         return urlString.toString();
     }

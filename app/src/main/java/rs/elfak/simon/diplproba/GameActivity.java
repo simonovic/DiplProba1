@@ -1,7 +1,6 @@
 package rs.elfak.simon.diplproba;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -86,7 +85,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(""/*game.getName()*/);
+        collapsingToolbar.setTitle("Run 'n Hide"/*game.getName()*/);
         a = (EditText)findViewById(R.id.a);
         b = (EditText)findViewById(R.id.b);
         c = (EditText)findViewById(R.id.c);
@@ -156,10 +155,10 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                     }
                     else if (response.equals("onStartGame")) {
                         if (img.equals("ok")) {
-                            //myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
-                            myLoc = new Location("blabla");
+                            myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                            /*myLoc = new Location("blabla");
                             myLoc.setLatitude(43.31926517);
-                            myLoc.setLongitude(21.89886868);
+                            myLoc.setLongitude(21.89886868);*/
                             Intent i = new Intent(getApplicationContext(), MapActivity.class);
                             double[] pom = {myLoc.getLatitude(), myLoc.getLongitude()};
                             double[] gpom = {game.getLat(), game.getLng()};
@@ -241,16 +240,18 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
                 else
                 {
                     if (gApiCl.isConnected()) {
-                        //myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
-                        myLoc = new Location("blabla");
+                        myLoc = null;
+                        while (myLoc == null)
+                            myLoc = LocationServices.FusedLocationApi.getLastLocation(gApiCl);
+                        /*myLoc = new Location("blabla");
                         myLoc.setLatitude(43.31926517);
-                        myLoc.setLongitude(21.89886868);
+                        myLoc.setLongitude(21.89886868);*/
                         if (myLoc != null) {
                             Location gameLoc = new Location("gameLocation");
                             gameLoc.setLatitude(game.getLat());
                             gameLoc.setLongitude(game.getLng());
                             float metres = myLoc.distanceTo(gameLoc);
-                            if (metres < 20)
+                            if (metres < 50)
                             {
                                 if (Integer.parseInt(game.getCreatorID()) == userID) { //creator)
                                     JSONObject data = new JSONObject();
@@ -330,8 +331,8 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void showDialog(boolean b)
     {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(GameActivity.this);
-        dialog.setTitle(b ? "Pozvani prijatelji:" : "Potvrdili dolazak:");
+        AlertDialog.Builder dialog = new AlertDialog.Builder(GameActivity.this, R.style.DialogTheme);
+        dialog.setTitle(b ? "Pozvani igrači:" : "Potvrdili dolazak:");
         View v = getLayoutInflater().inflate(R.layout.choose_friends, null);
         dialog.setView(v);
         ListView lv = (ListView)v.findViewById(R.id.chFrLV);
@@ -365,7 +366,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         int id = item.getItemId();
         if (id == R.id.delete)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
             builder.setTitle(game.getName())
                     .setMessage("Odustati od igre?")
                     .setNegativeButton("Ne", new DialogInterface.OnClickListener() {
@@ -390,7 +391,7 @@ public class GameActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         else if (id == R.id.confirmGame)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
             builder.setTitle(game.getName())
                     .setMessage("Potvrditi dolazak?")
                     .setNegativeButton("Ne", new DialogInterface.OnClickListener() {

@@ -11,7 +11,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/frReq"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="3dp" />
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/mybutton"
+        android:stateListAnimator="@drawable/my_animator"
+        android:textColor="#FFFFFF"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srlFriends"

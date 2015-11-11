@@ -42,10 +42,10 @@
     <string name="cr">Kreirao</string>
     <string name="map">Mapa</string>
     <string name="start">Započni igru</string>
-    <string name="rules">"   Ukoliko želite da učestvujete u nekoj od predstojećih igara, potrebno je pojaviti se na vreme i mestu koji su navedeni u samoj igri. Kreator igre započinje igru, i u narednih 10-ak sekundi ostali igrači pristupaju.
-   Igrači imaju na raspolaganju određeno vreme da se rasporede u regionu, koji je prikazan na mapi. Nakon toga igra počinje, i svi igrači su dobili svoje uloge.
-   Osnovno pravilo je da niko ne sme da izađe van regiona igre, u suprotnom, biva izbačen. 'Tragači' za zadatak imaju da uhvate 'Koordinatora', a da pritom ne budu uhvaćeni od strane 'Zaštitnika'. 'Koordinator' navodi 'Zaštitnike' slanjem poruka, uz ograničenje da mu se nijedan 'Zaštitnik' ne sme naći u blizini od 30-ak metara, inače se igra zavšava u korist 'Tragača'..
-
+    <string name="rules">"   Ukoliko želite da učestvujete u nekoj od predstojećih igara, potrebno je pojaviti se u zakazano vreme na zakazanom mestu okupljanja same igre. Kreator igre započinje igru, i u narednih 10-ak sekundi ostali igrači pristupaju.
+   Igrači imaju na raspolaganju određeno vreme da se rasporede u regionu, koji je prikazan na mapi. Nakon toga igra počinje, i svi igrači dobijaju svoje uloge.
+   Osnovno pravilo je da niko ne sme da izađe van regiona igre, u suprotnom, biva izbačen. 'Tragači' za zadatak imaju da uhvate 'Koordinatora', a da pritom ne budu uhvaćeni od strane 'Zaštitnika'. 'Koordinator' navodi 'Zaštitnike' slanjem poruka, uz ograničenje da mu se nijedan 'Zaštitnik' ne sme naći u blizini od 30-ak metara, inače se igra zavšava u korist 'Tragača'.
+   Crvenim krugom na mapi je obeležena sigurna zona za 'Koordinatora', i dok se nalazi u njoj, njegova pozicija se ne prikazuje na mapi 'Tragača'. Radijus i vreme koje 'Koordinator' sme da provede u sigurnoj zoni je određeno samom igrom. Ukoliko istekne dozvoljeno vreme, igra se završava pobedom 'Tragača'.
    'Zaštitnici' i 'Koordinator' pobedjuju ukoliko uhvate sve 'Tragače', dok 'Tragači' pobeđuju ako uhvate 'Koordinatora', ili ukoliko u igri ne ostane nijedan 'Zaštitnik'."</string>
     <string name="ruless">Pravila igre</string>
     <string name="safezone">Sigurna zona</string>
@@ -53,7 +53,7 @@
     <string name="safeTime">Dozvoljeno vreme u sigurnoj zoni: 50s</string>
     <string name="safeH">Radijus i vreme sigurne zone:</string>
 
-    <string name="invFr">Pozvani prijatelji</string>
+    <string name="invFr">Pozvani igrači</string>
     <string name="confFr">Potvrdili dolazak</string>
     <string name="delete">Izbaci igru</string>
     <string name="confGame">Potvrdi dolazak</string>
@@ -65,6 +65,6 @@
     <string name="title_activity_map">Example action</string>
     <string name="title_activity_profile">Profil</string>
     <string name="title_activity_game">ImeIgre</string>
-    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_chat">Chat</string>
 
 </resources>

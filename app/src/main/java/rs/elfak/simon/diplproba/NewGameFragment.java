@@ -27,7 +27,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -65,7 +64,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             final Calendar c = Calendar.getInstance();
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
-            return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
+            return new TimePickerDialog(getActivity(), R.style.DialogTheme, this, hour, minute, DateFormat.is24HourFormat(getActivity()));
         }
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             /**int hh = (hourOfDay-2); // izgleda da ovo ne mora, videcemo
@@ -93,7 +92,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            return new DatePickerDialog(getActivity(), this, year, month, day);
+            return new DatePickerDialog(getActivity(), R.style.DialogTheme, this, year, month, day);
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
             d = ""+day; m = ""+(month+1); y = ""+year;
@@ -120,7 +119,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
             final CharSequence frlist[] = pom.toArray(new CharSequence[pom.size()]);
             final boolean bl[] = first ? new boolean[frlist.length] : ((MainActivity)getActivity()).getChosenFr();
             if (first) first = false;
-            return new AlertDialog.Builder(getActivity())
+            return new AlertDialog.Builder(getActivity(), R.style.DialogTheme)
                     .setTitle("Prijatelji:")
                     .setMultiChoiceItems(frlist, bl, new DialogInterface.OnMultiChoiceClickListener() {
                         @Override
@@ -255,7 +254,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener
 
     private void safeDialog()
     {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
         dialog.setTitle("Sigurna zona");
         View v = getActivity().getLayoutInflater().inflate(R.layout.safe_zone, null);
         SeekBar barRad = (SeekBar)v.findViewById(R.id.barRad);

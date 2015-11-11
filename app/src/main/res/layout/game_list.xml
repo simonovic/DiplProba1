@@ -14,10 +14,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/cv"
         game_list:cardCornerRadius="6dp"
-        android:background="#FFEFDB"
+        game_list:cardBackgroundColor="#FFEFDB"
+        game_list:cardElevation="6dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:layout_margin="4dp">
+        android:layout_margin="10dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -28,24 +31,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingRight="25dp"
-                android:paddingLeft="10dp">
+                android:paddingRight="20dp"
+                android:paddingLeft="12dp"
+                android:layout_marginRight="5dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/name"
-                    android:paddingTop="2dp" />
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/creator" />
+                    android:text="@string/creator"
+                    android:paddingBottom="2dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/date" />
+                    android:text="@string/date"
+                    android:paddingBottom="2dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,36 +65,41 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/name"
                     android:id="@+id/nameTV"
-                    android:textColor="#466bbc"
-                    android:paddingTop="2dp" />
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:textColor="#732124" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/creator"
                     android:id="@+id/creatorTV"
-                    android:textColor="#466bbc" />
+                    android:paddingBottom="2dp"
+                    android:textColor="#732124" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/date"
                     android:id="@+id/dataTV"
-                    android:textColor="#466bbc" />
+                    android:paddingBottom="2dp"
+                    android:textColor="#732124" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/address"
                     android:id="@+id/addressTV"
-                    android:textColor="#466bbc" />
+                    android:textColor="#732124" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

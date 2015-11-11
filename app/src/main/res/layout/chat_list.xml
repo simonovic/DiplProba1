@@ -15,14 +15,20 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:id="@+id/unameTV" />
+            android:id="@+id/unameTV"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp"
+            android:textColor="#8A2C30" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Small Text"
-            android:id="@+id/timeTV" />
+            android:id="@+id/timeTV"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="5dp"
+            android:textColor="#732124" />
     </LinearLayout>
 
     <TextView
@@ -30,6 +36,9 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/messTV" />
+        android:id="@+id/messTV"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="2dp"
+        android:textColor="#000000" />
 
 </LinearLayout>

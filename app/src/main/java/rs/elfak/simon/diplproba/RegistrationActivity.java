@@ -107,7 +107,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                     if (response.equals("busy"))
                     {
-                        uname.setError("Zauzato");
+                        uname.setError("Zauzeto");
                         uName = false;
                     }
                     else if (response.equals("free")) {

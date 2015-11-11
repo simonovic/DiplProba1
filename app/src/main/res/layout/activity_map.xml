@@ -27,7 +27,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="top|left"
-                android:clickable="false"/>
+                android:clickable="false"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/rolebtn"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/chatBtn"

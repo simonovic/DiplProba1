@@ -2,22 +2,46 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="colorPrimaryDark">#732124</item>
+        <item name="colorAccent">#FF4081</item>
+        <item name="colorPrimary">#8A2C30</item>
     </style>
 
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+        <item name="colorPrimaryDark">#732124</item>
+        <item name="colorAccent">#732124</item>
+        <item name="colorPrimary">#8A2C30</item>
+        <item name="android:background">#FFD180</item>
+    </style>
+
+    <style name="RegTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">#732124</item>
+        <item name="colorAccent">#732124</item>
+        <item name="colorPrimary">#8A2C30</item>
+    </style>
+
+    <style name="GameTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">#0F0A44</item>
+        <item name="colorAccent">#732124</item>
+        <item name="colorPrimary">#8A2C30</item>
     </style>
 
     <style name="MainTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#673AB7</item>
+        <item name="colorPrimary">#8A2C30</item>
         <item name="colorPrimaryDark">#732124</item>
-        <item name="colorAccent">#FF4081</item>
+        <item name="colorAccent">#732124</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="ProfileTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowNoTitle">false</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">#8A2C30</item>
+        <item name="colorPrimaryDark">#732124</item>
+        <item name="colorAccent">#732124</item>
+        <item name="android:background">#FFD180</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

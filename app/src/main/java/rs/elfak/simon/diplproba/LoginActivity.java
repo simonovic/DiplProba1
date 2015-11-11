@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -86,6 +88,11 @@ public class LoginActivity extends Activity
         userName = shPref.getString(Constants.userNamepref,"false");
         if ((userID != 0) && (!userName.equals("false")))
             startActivity(new Intent(this, MainActivity.class));
+        TextView a1 = (TextView)findViewById(R.id.a1);
+        TextView a2 = (TextView)findViewById(R.id.a2);
+        Typeface mFont = Typeface.createFromAsset(getAssets(), "harlow.ttf");
+        a1.setTypeface(mFont);
+        a2.setTypeface(mFont);
     }
 
     @Override

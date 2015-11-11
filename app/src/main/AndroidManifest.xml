@@ -31,6 +31,7 @@
 
         <activity
             android:name=".LoginActivity"
+            android:theme="@style/LoginTheme"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize">
@@ -43,6 +44,7 @@
             android:name=".RegistrationActivity"
             android:label="@string/title_activity_registration"
             android:parentActivityName=".LoginActivity"
+            android:theme="@style/RegTheme"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
@@ -74,7 +76,7 @@
             android:name=".GameActivity"
             android:label="@string/title_activity_game"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/MainTheme"
+            android:theme="@style/GameTheme"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data

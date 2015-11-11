@@ -8,16 +8,15 @@
     tools:context="rs.elfak.simon.diplproba.ChatActivity"
     android:orientation="vertical"
     android:paddingBottom="0dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     android:background="#FFD180">
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/listView"
-        android:layout_gravity="center_horizontal" />
+        android:id="@+id/listView" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,13 +36,20 @@
             android:background="@drawable/myedittext"
             android:padding="7dp"
             android:focusableInTouchMode="true"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="3dp" />
 
         <ImageButton
             android:id="@+id/send_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="38dp"
             android:src="@android:drawable/ic_menu_send"
-            android:onClick="onSendBtn" />
+            android:onClick="onSendBtn"
+            android:background="@drawable/mybutton"
+            android:stateListAnimator="@drawable/my_animator"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="3dp" />
     </LinearLayout>
 </LinearLayout>
